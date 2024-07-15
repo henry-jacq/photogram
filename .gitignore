@@ -1,0 +1,10 @@
+.env
+.idea
+.phpunit.result.cache
+vendor/
+node_modules/
+resources/dist/
+public/js/vendor/
+storage/temp/
+storage/posts/
+storage/avatars/
