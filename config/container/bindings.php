@@ -2,7 +2,7 @@
 
 use Slim\App;
 use App\Core\View;
-use App\Model\User;
+use App\Entity\User;
 use App\Core\Config;
 use App\Core\Request;
 use App\Core\Session;
@@ -29,15 +29,15 @@ return [
 
         return $app;
     },
+    Config::class => create(Config::class)->constructor(
+        require CONFIG_PATH . '/app.php'
+    ),
     EntityManager::class => fn (Config $config) => EntityManager::create(
         $config->get('doctrine.connection'),
         ORMSetup::createAttributeMetadataConfiguration(
             $config->get('doctrine.entity_dir'),
             $config->get('doctrine.dev_mode')
         )
-    ),
-    Config::class => create(Config::class)->constructor(
-        require CONFIG_PATH . '/app.php'
     ),
     View::class => function(ContainerInterface $container){
         return new View($container->get(Config::class));
@@ -49,9 +49,9 @@ return [
     Request::class => function(ContainerInterface $container) {
         return new Request($container->get(SessionInterface::class));
     },
-    User::class => function(ContainerInterface $container){
-        return new User();
-    },
+    // User::class => function(ContainerInterface $container){
+    //     return new User();
+    // },
     ZipArchive::class => function () {
         return new ZipArchive();
     }
