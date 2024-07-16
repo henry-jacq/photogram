@@ -1,14 +1,25 @@
 {
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
     "require": {
+        "ext-pdo": "*",
+        "doctrine/dbal": "^3.4",
+        "doctrine/migrations": "^3.5",
+        "doctrine/orm": "^2.13",
+        "symfony/cache": "^6.1",
+        "symfony/console": "^6.1",
+        "symfony/twig-bridge": "^6.1",
         "vlucas/phpdotenv": "^5.5",
         "slim/slim": "4.*",
         "slim/psr7": "^1.6",
         "php-di/php-di": "^7.0",
         "nesbot/carbon": "^2.68"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/"
-        }
     }
 }
