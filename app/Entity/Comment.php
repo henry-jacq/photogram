@@ -11,7 +11,7 @@ class Comment
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private Post $post;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
