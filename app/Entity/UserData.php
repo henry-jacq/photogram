@@ -31,12 +31,6 @@ class UserData
     #[ORM\Column(name: 'instagram_handle', type: 'string', nullable: true)]
     private ?string $instagramHandle;
 
-    #[ORM\Column(name: 'twitter_handle', type: 'string', nullable: true)]
-    private ?string $twitterHandle;
-
-    #[ORM\Column(name: 'facebook_handle', type: 'string', nullable: true)]
-    private ?string $facebookHandle;
-
     #[ORM\Column(name: 'linkedin_handle', type: 'string', nullable: true)]
     private ?string $linkedinHandle;
 
@@ -125,28 +119,6 @@ class UserData
     public function setInstagramHandle(?string $instagramHandle): self
     {
         $this->instagramHandle = $instagramHandle;
-        return $this;
-    }
-
-    public function getTwitterHandle(): ?string
-    {
-        return $this->twitterHandle;
-    }
-
-    public function setTwitterHandle(?string $twitterHandle): self
-    {
-        $this->twitterHandle = $twitterHandle;
-        return $this;
-    }
-
-    public function getFacebookHandle(): ?string
-    {
-        return $this->facebookHandle;
-    }
-
-    public function setFacebookHandle(?string $facebookHandle): self
-    {
-        $this->facebookHandle = $facebookHandle;
         return $this;
     }
 

@@ -38,7 +38,7 @@ class Comment
         return $this->post;
     }
 
-    public function setPost(Post $post): self
+    public function setPost(?Post $post): self
     {
         $this->post = $post;
         return $this;

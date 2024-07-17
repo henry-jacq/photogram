@@ -13,11 +13,11 @@ class Post
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $user;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $caption;
+    private ?string $caption = null;
 
     #[ORM\Column(type: 'datetime', name: 'upload_date')]
     private \DateTime $uploadDate;
@@ -25,13 +25,13 @@ class Post
     #[ORM\Column(type: 'boolean', name: 'is_archived', options: ['default' => false])]
     private bool $isArchived;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Image::class)]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Image::class, cascade: ['persist', 'remove'])]
     private Collection $images;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Like::class)]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Like::class, cascade: ['persist', 'remove'])]
     private Collection $likes;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, cascade: ['persist', 'remove'])]
     private Collection $comments;
 
     public function __construct()
@@ -51,7 +51,7 @@ class Post
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
         return $this;

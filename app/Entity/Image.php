@@ -11,8 +11,8 @@ class Image
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'images')]
-    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false)]
-    private Post $post;
+    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Post $post;
 
     #[ORM\Column(type: 'string', name: 'image_path')]
     private string $imagePath;
@@ -22,12 +22,12 @@ class Image
         return $this->id;
     }
 
-    public function getPost(): Post
+    public function getPost(): ?Post
     {
         return $this->post;
     }
 
-    public function setPost(Post $post): self
+    public function setPost(?Post $post): self
     {
         $this->post = $post;
         return $this;
