@@ -1,14 +1,14 @@
 <?php
 
 use Slim\App;
+use App\Core\Auth;
 use App\Core\View;
-use App\Entity\User;
 use App\Core\Config;
 use App\Core\Request;
 use App\Core\Session;
 use function DI\create;
-use Slim\Factory\AppFactory;
 use Doctrine\ORM\ORMSetup;
+use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use App\Interfaces\SessionInterface;
 use Psr\Container\ContainerInterface;
@@ -39,19 +39,19 @@ return [
             $config->get('doctrine.dev_mode')
         )
     ),
-    View::class => function(ContainerInterface $container){
+    ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
+    Request::class => function(ContainerInterface $container) {
+        return new Request($container->get(SessionInterface::class));
+    },
+    Auth::class => function(ContainerInterface $container){
+        return new Auth($container->get(EntityManager::class), $container->get(SessionInterface::class));
+    },
+    View::class => function (ContainerInterface $container) {
         return new View($container->get(Config::class));
     },
     SessionInterface::class => function (ContainerInterface $container) {
         return new Session($container->get(Config::class));
     },
-    ResponseFactoryInterface::class => fn(App $app) => $app->getResponseFactory(),
-    Request::class => function(ContainerInterface $container) {
-        return new Request($container->get(SessionInterface::class));
-    },
-    // User::class => function(ContainerInterface $container){
-    //     return new User();
-    // },
     ZipArchive::class => function () {
         return new ZipArchive();
     }

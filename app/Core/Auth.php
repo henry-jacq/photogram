@@ -3,13 +3,15 @@
 namespace App\Core;
 
 use Exception;
-use App\Model\User;
+use App\Entity\User;
 use App\Core\Session;
+use App\Entity\UserData;
+use Doctrine\ORM\EntityManager;
 
 class Auth
 { 
     public function __construct(
-        private readonly User $user,
+        private readonly EntityManager $manager,
         private readonly Session $session,
     )
     {
@@ -20,26 +22,30 @@ class Auth
      */
     public function register(array $credentials)
     {
-        $email = $this->user->validateEmail($credentials['email']);
-        $username = $this->user->validateUsername($credentials['username']);
+        // Check for existing user with the same username or email
+        $user = $this->manager->getRepository(User::class)->createQueryBuilder('u')
+            ->where('u.username = :username OR u.email = :email')
+            ->setParameter('username', $credentials['username'])
+            ->setParameter('email', $credentials['email'])
+            ->getQuery()
+            ->getOneOrNullResult();
 
-        if ($username === 'admin') {
-            return false;
-        }
-        
-        if ($email === false) {
-            return false;
+        if (!$user) {
+            $user = new User();
+            $userData = new UserData();
+            $user->setEmail($credentials['email']);
+            $user->setUsername($credentials['username']);
+            $user->setPassword(password_hash($credentials['password'], PASSWORD_DEFAULT, ['cost' => 12]));
+            $user->setCreatedAt(new \DateTime());
+            $userData->setUser($user);
+            $userData->setFullName($credentials['fullname']);
+            $this->manager->persist($user);
+            $this->manager->persist($userData);
+            $this->manager->flush();
+            return true;
         }
 
-        try {
-            if ($this->user->exists($username)) {
-                return false;
-            }
-            
-            return $this->user->create($credentials);
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        return false;
     }
 
     /**
@@ -47,14 +53,14 @@ class Auth
      */
     public function login($user, $password)
     {
-        $result = $this->user->exists($user);
+        // $result = $this->user->exists($user);
         
-        if ($result !== false) {
-            if (password_verify($password, $result['password'])) {
-                $this->session->put('user', $result['id']);
-                return true;
-            }
-        }
+        // if ($result !== false) {
+        //     if (password_verify($password, $result['password'])) {
+        //         $this->session->put('user', $result['id']);
+        //         return true;
+        //     }
+        // }
         return false;
     }
     
