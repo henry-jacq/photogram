@@ -15,14 +15,14 @@ class Storage
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $user;
 
-    #[ORM\Column(type: 'bigint', name:'total_space', options: ['unsigned' => true])]
-    private int $totalSpace;
+    #[ORM\Column(type: 'float', name:'total_space', options: ['unsigned' => true])]
+    private float $totalSpace;
 
-    #[ORM\Column(type: 'bigint', name:'used_space', options: ['unsigned' => true])]
-    private int $usedSpace;
+    #[ORM\Column(type: 'float', name:'used_space', options: ['unsigned' => true])]
+    private float $usedSpace;
 
-    #[ORM\Column(type: 'bigint', name:'remaining_space', options: ['unsigned' => true])]
-    private int $remainingSpace;
+    #[ORM\Column(type: 'float', name:'remaining_space', options: ['unsigned' => true])]
+    private float $remainingSpace;
 
     public function getId(): int
     {

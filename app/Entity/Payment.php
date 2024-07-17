@@ -23,7 +23,7 @@ class Payment
     #[ORM\Column(type: 'string', name: 'currency')]
     private string $currency;
 
-    #[ORM\Column(type: 'string', name: 'payment_status', columnDefinition: "ENUM('pending', 'completed', 'failed') NOT NULL")]
+    #[ORM\Column(type: 'string', name: 'payment_status')]
     private string $paymentStatus;
 
     #[ORM\Column(type: 'string', name: 'transaction_id', unique: true)]
