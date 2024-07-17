@@ -15,10 +15,10 @@ ${basename(__FILE__, '.php')} = function () {
 
         $data = [
             'images' => $paths,
-            'user_id' => $this->getUserId(),
+            'user' => $this->getUser(),
             'text' => $this->data['post_text'],
         ];
-        
+
         if ($this->post->createPost($data)) {
             usleep(mt_rand(400000, 1300000));
             return $this->response([

@@ -5,8 +5,11 @@ namespace App\Controller;
 use Closure;
 use App\Core\Auth;
 use App\Core\View;
+use App\Entity\User;
 use App\Core\Session;
+use App\Services\PostService;
 use InvalidArgumentException;
+use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -38,8 +41,10 @@ class ApiController
 
     public function __construct(
         private readonly Auth $auth,
+        private readonly EntityManager $manager,
         private readonly View $view,
-        private readonly Session $session
+        private readonly Session $session,
+        private readonly PostService $post
     )
     {
     }
@@ -295,6 +300,15 @@ class ApiController
     public function getUserId(): string
     {
         return $this->session->get('user');
+    }
+
+    /**
+     * Get User Object
+     */
+    public function getUser()
+    {
+        $user = $this->manager->getRepository(User::class)->findOneBy(['id' => $this->getUserId()]);
+        return $user;
     }
     
     /**

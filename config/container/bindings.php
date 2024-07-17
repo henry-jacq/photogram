@@ -11,6 +11,7 @@ use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use App\Interfaces\SessionInterface;
+use App\Services\PostService;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
@@ -54,5 +55,8 @@ return [
     },
     ZipArchive::class => function () {
         return new ZipArchive();
+    },
+    PostService::class => function (ContainerInterface $container) {
+        return new PostService($container->get(EntityManager::class));
     }
 ];
