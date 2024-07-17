@@ -21,7 +21,7 @@
                             </div>
                             <small class="ms-auto small text-end">Prices are marked in INR</small>
                         </div>
-                        <button type="button" class="btn w-100 bg-body-secondary bg-opacity-50 border-0 text-body">Subscribe</button>
+                        <button type="button" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</button>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                             </div>
                             <small class="ms-auto small text-end">Prices are marked in INR</small>
                         </div>
-                        <button type="button" class="btn w-100 bg-body-secondary bg-opacity-50 border-0 text-body">Subscribe</button>
+                        <button type="button" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</button>
                     </div>
                 </div>
             </div>
