@@ -3,24 +3,25 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\GeneratedValue;
 
 #[ORM\Entity, ORM\Table(name: 'storage')]
 class Storage
 {
-    #[ORM\Id, ORM\Column(type: 'integer', options: ['unsigned' => true]), ORM\GeneratedValue]
+    #[ORM\Id, ORM\Column(type: 'integer', options: ['unsigned' => true]), GeneratedValue]
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $user;
 
-    #[ORM\Column(type: 'integer', name: 'total_space')]
+    #[ORM\Column(type: 'bigint', name:'total_space', options: ['unsigned' => true])]
     private int $totalSpace;
 
-    #[ORM\Column(type: 'integer', name: 'used_space')]
+    #[ORM\Column(type: 'bigint', name:'used_space', options: ['unsigned' => true])]
     private int $usedSpace;
 
-    #[ORM\Column(type: 'integer', name: 'remaining_space')]
+    #[ORM\Column(type: 'bigint', name:'remaining_space', options: ['unsigned' => true])]
     private int $remainingSpace;
 
     public function getId(): int

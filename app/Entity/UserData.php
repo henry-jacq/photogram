@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity, ORM\Table(name: 'user_data')]
 class UserData
 {
-    #[ORM\Id, ORM\OneToOne(targetEntity: User::class, inversedBy: 'userData'), ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\Id, ORM\OneToOne(targetEntity: User::class, inversedBy: 'userData'), ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private User $user;
 
     #[ORM\Column(name: 'full_name', type: 'string', nullable: true)]

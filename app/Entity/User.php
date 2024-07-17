@@ -12,10 +12,10 @@ class User
     #[ORM\Id, ORM\Column(type: 'integer', options: ['unsigned' => true]), ORM\GeneratedValue]
     private int $id;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type:'string', unique: true)]
     private string $username;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type:'string', unique: true)]
     private string $email;
 
     #[ORM\Column(type: 'string')]
