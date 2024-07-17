@@ -1,6 +1,3 @@
-<?php
-$view = $user['preferences']['view'] ?? 'grid';
-?>
 <div class="container px-md-5">
     <div class="post-feed-section py-4">
         <div class="d-flex justify-content-between align-items-center">
