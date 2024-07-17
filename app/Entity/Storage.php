@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\GeneratedValue;
 
-#[ORM\Entity, ORM\Table(name: 'storage')]
+#[ORM\Entity, ORM\Table(name: 'user_storage')]
 class Storage
 {
     #[ORM\Id, ORM\Column(type: 'integer', options: ['unsigned' => true]), GeneratedValue]
