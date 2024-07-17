@@ -2,39 +2,52 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Table;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
-
-#[Entity, Table('users')]
+#[ORM\Entity, ORM\Table(name: 'users')]
 class User
 {
-    #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
+    #[ORM\Id, ORM\Column(type: 'integer', options: ['unsigned' => true]), ORM\GeneratedValue]
     private int $id;
 
-    #[Column]
+    #[ORM\Column(type: 'string')]
     private string $username;
 
-    #[Column]
+    #[ORM\Column(type: 'string')]
     private string $email;
 
-    #[Column]
+    #[ORM\Column(type: 'string')]
     private string $password;
 
-    #[Column(name: 'created_at')]
-    private \DateTime $created_at;
+    #[ORM\Column(type: 'datetime', name: 'created_at')]
+    private \DateTime $createdAt;
 
-    #[Column(name: 'reset_token')]
-    private string $reset_token;
+    #[ORM\Column(type: 'string', name: 'reset_token', nullable: true)]
+    private ?string $resetToken;
 
-    #[Column(name: 'reset_token_expiry')]
-    private \DateTime $reset_token_expiry;
+    #[ORM\Column(type: 'datetime', name: 'reset_token_expiry', nullable: true)]
+    private ?\DateTime $resetTokenExpiry;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private UserData $userData;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
+    private Collection $posts;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Subscription::class)]
+    private Collection $subscriptions;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
+    private Collection $payments;
 
     public function __construct()
-    {}
+    {
+        $this->posts = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
+        $this->payments = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -46,7 +59,7 @@ class User
         return $this->username;
     }
 
-    public function setUsername(string $username): User
+    public function setUsername(string $username): self
     {
         $this->username = $username;
         return $this;
@@ -57,7 +70,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): User
+    public function setEmail(string $email): self
     {
         $this->email = $email;
         return $this;
@@ -68,7 +81,7 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(string $password): self
     {
         $this->password = $password;
         return $this;
@@ -76,68 +89,123 @@ class User
 
     public function getCreatedAt(): \DateTime
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $created_at): User
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getResetToken(): string
+    public function getResetToken(): ?string
     {
-        return $this->reset_token;
+        return $this->resetToken;
     }
 
-    public function setResetToken(string $reset_token): User
+    public function setResetToken(?string $resetToken): self
     {
-        $this->reset_token = $reset_token;
+        $this->resetToken = $resetToken;
         return $this;
     }
 
-    public function getResetTokenExpiry(): \DateTime
+    public function getResetTokenExpiry(): ?\DateTime
     {
-        return $this->reset_token_expiry;
+        return $this->resetTokenExpiry;
     }
 
-    public function setResetTokenExpiry(\DateTime $reset_token_expiry): User
+    public function setResetTokenExpiry(?\DateTime $resetTokenExpiry): self
     {
-        $this->reset_token_expiry = $reset_token_expiry;
+        $this->resetTokenExpiry = $resetTokenExpiry;
         return $this;
     }
 
-    public function toArray(): array
+    public function getUserData(): UserData
     {
-        return [
-            'id' => $this->getId(),
-            'username' => $this->getUsername(),
-            'email' => $this->getEmail(),
-            'password' => $this->getPassword(),
-            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
-            'reset_token' => $this->getResetToken(),
-            'reset_token_expiry' => $this->getResetTokenExpiry()->format('Y-m-d H:i:s'),
-        ];
+        return $this->userData;
     }
 
-    public function fromArray(array $data): User
+    public function setUserData(UserData $userData): self
     {
-        $this->setUsername($data['username']);
-        $this->setEmail($data['email']);
-        $this->setPassword($data['password']);
-        $this->setCreatedAt(new \DateTime($data['created_at']));
-        $this->setResetToken($data['reset_token']);
-        $this->setResetTokenExpiry(new \DateTime($data['reset_token_expiry']));
+        $this->userData = $userData;
         return $this;
     }
 
-    public function jsonSerialize(): array
+    public function getPosts(): Collection
     {
-        return $this->toArray();
+        return $this->posts;
     }
 
-    public function __toString(): string
+    public function addPost(Post $post): self
     {
-        return json_encode($this->jsonSerialize());
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSubscriptions(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    public function addSubscription(Subscription $subscription): self
+    {
+        if (!$this->subscriptions->contains($subscription)) {
+            $this->subscriptions[] = $subscription;
+            $subscription->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscription(Subscription $subscription): self
+    {
+        if ($this->subscriptions->removeElement($subscription)) {
+            if ($subscription->getUser() === $this) {
+                $subscription->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): self
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments[] = $payment;
+            $payment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): self
+    {
+        if ($this->payments->removeElement($payment)) {
+            if ($payment->getUser() === $this) {
+                $payment->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

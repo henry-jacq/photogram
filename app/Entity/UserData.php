@@ -2,39 +2,162 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping as ORM;
 
-
-#[Entity, Table('user_data')]
+#[ORM\Entity, ORM\Table(name: 'user_data')]
 class UserData
 {
-    #[Id, Column(options: ['foreign' => true])]
-    private int $user_id;
+    #[ORM\Id, ORM\OneToOne(targetEntity: User::class, inversedBy: 'userData'), ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    private User $user;
 
-    #[Column]
-    private string $fullname;
+    #[ORM\Column(name: 'full_name', type: 'string', nullable: true)]
+    private ?string $fullName;
 
-    #[Column]
-    private string $avatar;
+    #[ORM\Column(name: 'profile_avatar', type: 'string', nullable: true)]
+    private ?string $profileAvatar;
 
-    #[Column]
-    private string $website;
+    #[ORM\Column(name: 'website', type: 'string', nullable: true)]
+    private ?string $website;
 
-    #[Column]
-    private string $job_title;
+    #[ORM\Column(name: 'job_title', type: 'string', nullable: true)]
+    private ?string $jobTitle;
 
-    #[Column]
-    private string $bio;
+    #[ORM\Column(name: 'bio', type: 'text', nullable: true)]
+    private ?string $bio;
 
-    #[Column]
-    private string $location;
+    #[ORM\Column(name: 'location', type: 'string', nullable: true)]
+    private ?string $location;
 
-    #[Column]
-    private string $instagram_handle;
+    #[ORM\Column(name: 'instagram_handle', type: 'string', nullable: true)]
+    private ?string $instagramHandle;
 
-    #[Column]
-    private string $linkedin_handle;
+    #[ORM\Column(name: 'twitter_handle', type: 'string', nullable: true)]
+    private ?string $twitterHandle;
+
+    #[ORM\Column(name: 'facebook_handle', type: 'string', nullable: true)]
+    private ?string $facebookHandle;
+
+    #[ORM\Column(name: 'linkedin_handle', type: 'string', nullable: true)]
+    private ?string $linkedinHandle;
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->fullName;
+    }
+
+    public function setFullName(?string $fullName): self
+    {
+        $this->fullName = $fullName;
+        return $this;
+    }
+
+    public function getProfileAvatar(): ?string
+    {
+        return $this->profileAvatar;
+    }
+
+    public function setProfileAvatar(?string $profileAvatar): self
+    {
+        $this->profileAvatar = $profileAvatar;
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
+        return $this;
+    }
+
+    public function getJobTitle(): ?string
+    {
+        return $this->jobTitle;
+    }
+
+    public function setJobTitle(?string $jobTitle): self
+    {
+        $this->jobTitle = $jobTitle;
+        return $this;
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): self
+    {
+        $this->bio = $bio;
+        return $this;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?string $location): self
+    {
+        $this->location = $location;
+        return $this;
+    }
+
+    public function getInstagramHandle(): ?string
+    {
+        return $this->instagramHandle;
+    }
+
+    public function setInstagramHandle(?string $instagramHandle): self
+    {
+        $this->instagramHandle = $instagramHandle;
+        return $this;
+    }
+
+    public function getTwitterHandle(): ?string
+    {
+        return $this->twitterHandle;
+    }
+
+    public function setTwitterHandle(?string $twitterHandle): self
+    {
+        $this->twitterHandle = $twitterHandle;
+        return $this;
+    }
+
+    public function getFacebookHandle(): ?string
+    {
+        return $this->facebookHandle;
+    }
+
+    public function setFacebookHandle(?string $facebookHandle): self
+    {
+        $this->facebookHandle = $facebookHandle;
+        return $this;
+    }
+
+    public function getLinkedinHandle(): ?string
+    {
+        return $this->linkedinHandle;
+    }
+
+    public function setLinkedinHandle(?string $linkedinHandle): self
+    {
+        $this->linkedinHandle = $linkedinHandle;
+        return $this;
+    }
 }
