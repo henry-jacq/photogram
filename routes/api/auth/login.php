@@ -6,7 +6,7 @@ ${basename(__FILE__, '.php')} = function () {
             usleep(mt_rand(400000, 1300000));
             return $this->response([
                 'message' => 'Authenticated',
-                'redirect' => $this->getRedirect()
+                'redirect' => $this->getRedirect('/home')
             ], 202);
         }
         usleep(mt_rand(400000, 1300000));

@@ -53,14 +53,18 @@ class Auth
      */
     public function login($user, $password)
     {
-        // $result = $this->user->exists($user);
-        
-        // if ($result !== false) {
-        //     if (password_verify($password, $result['password'])) {
-        //         $this->session->put('user', $result['id']);
-        //         return true;
-        //     }
-        // }
+        // Check if the user exists with the given username or email
+        $user = $this->manager->getRepository(User::class)->createQueryBuilder('u')
+            ->where('u.username = :user OR u.email = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($user && password_verify($password, $user->getPassword())) {
+            $this->session->put('user', $user->getId());
+            return true;
+        }
+
         return false;
     }
     
