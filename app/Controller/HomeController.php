@@ -42,7 +42,8 @@ class HomeController extends Controller
         $userData = $request->getAttribute('userData');
 
         $args = [
-            'title' => 'Photogram Pro'
+            'title' => 'Photogram Pro',
+            'user' => $userData
         ];
 
         return $this->render($response, 'user/subscribe', $args);

@@ -2,10 +2,15 @@
 
 namespace App\Core;
 
-use Exception;
 use App\Entity\User;
 use App\Core\Session;
+use App\Entity\Storage;
 use App\Entity\UserData;
+use App\Entity\Preferences;
+use App\Entity\Subscription;
+use App\Enum\PreferredTheme;
+use App\Enum\StorageSpace;
+use App\Enum\SubscriptionPlan;
 use Doctrine\ORM\EntityManager;
 
 class Auth
@@ -32,15 +37,37 @@ class Auth
 
         if (!$user) {
             $user = new User();
-            $userData = new UserData();
             $user->setEmail($credentials['email']);
             $user->setUsername($credentials['username']);
             $user->setPassword(password_hash($credentials['password'], PASSWORD_DEFAULT, ['cost' => 12]));
             $user->setCreatedAt(new \DateTime());
+            $this->manager->persist($user);
+            
+            $userData = new UserData();
             $userData->setUser($user);
             $userData->setFullName($credentials['fullname']);
-            $this->manager->persist($user);
             $this->manager->persist($userData);
+
+            $subscription = new Subscription();
+            $subscription->setUser($user);
+            $subscription->setPlan(SubscriptionPlan::Free->value);
+            $subscription->setStartDate(new \DateTime());
+            $subscription->setIsActive(true);
+            $this->manager->persist($subscription);
+
+            $storage = new Storage();
+            $storage->setUser($user);
+            $storage->setUsedSpace(0);
+            $free_space = StorageSpace::Free->value; // In Bytes
+            $storage->setTotalSpace($free_space);
+            $storage->setRemainingSpace($free_space);
+            $this->manager->persist($storage);
+
+            $preferences = new Preferences();
+            $preferences->setUser($user);
+            $preferences->setTheme(PreferredTheme::Dark->value);
+            $this->manager->persist($preferences);
+            
             $this->manager->flush();
             return true;
         }
