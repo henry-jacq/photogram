@@ -5,15 +5,21 @@ ${basename(__FILE__, '.php')} = function () {
         if ($this->paramsExists(['id'])) {
             
             $pid = $this->data['id'];
-            $pdata = $this->post->getPostById($pid);
+            $post = $this->post->getPostById($pid);
 
-            if ($pdata['user_id'] !== $this->getUserId()) {
+            if (!$post) {
+                return $this->response([
+                    'message' => 'Post not found'
+                ], 404);
+            }
+
+            if ((int)$post->getUser()->getId() !== (int)$this->getUserId()) {
                 return $this->response([
                     'message' => 'Unauthorized'
                 ], 401);
             }
             
-            $result = $this->post->deletePost($pid);
+            $result = $this->post->deletePost($post);
             
             return $this->response([
                 'message' => $result

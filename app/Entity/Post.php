@@ -105,6 +105,11 @@ class Post
         return $this;
     }
 
+    /**
+     * Remove image before post get deleted
+     * 
+     * Not Used So Far
+     */
     public function removeImage(Image $image): self
     {
         if ($this->images->removeElement($image)) {
