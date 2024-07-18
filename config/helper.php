@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 // Helper functions
 
 /**
@@ -80,3 +82,10 @@ function hashtag(string $text)
     $filteredText = preg_replace('/#(\w+)/', '<a href="/discover/tags/$1">#$1</a>', $text);
     return $filteredText;
 }
+
+function getHumanDiffTime(string $timestamp)
+{
+    $time = Carbon::parse($timestamp);
+    return $time->diffForHumans();
+}
+
