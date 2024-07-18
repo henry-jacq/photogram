@@ -52,19 +52,11 @@ Install php-gd and php-zup extension:
 sudo apt-get install php-gd php-zip php-mongodb php-cli php-json php-mbstring php-xml php-pcov php-xdebug certbot python3-certbot-apache
 ```
 
-Install PHPUnit
-```
-wget -O phpunit.phar https://phar.phpunit.de/phpunit-10.phar
-chmod +x phpunit.phar
-sudo mv phpunit.phar /usr/local/bin/phpunit
-```
 
-Uncomment the gd and mongodb extension in php.ini config:
+Uncomment the gd extension in php.ini config:
 ```php
 ;extension=gd
-;extension=mongodb
 extension=gd
-extension=mongodb
 ```
 
 Enabling apache modules:
