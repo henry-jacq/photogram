@@ -4,13 +4,17 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Core\Controller;
+use App\Services\PostService;
+use App\Services\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class HomeController extends Controller
 {
     public function __construct(
-        private readonly View $view
+        private readonly View $view,
+        private readonly PostService $post,
+        private readonly UserService $user
     ) {
         parent::__construct($view);
     }
@@ -18,10 +22,12 @@ class HomeController extends Controller
     public function home(Request $request, Response $response): Response
     {
         $userData = $request->getAttribute('userData');
+        $posts = $this->post->fetchAllPosts();
 
         $args = [
             'title' => 'Home',
-            'user' => $userData
+            'user' => $userData,
+            'posts' => $posts
         ];
         return $this->render($response, 'user/home', $args);
     }
@@ -51,36 +57,34 @@ class HomeController extends Controller
 
     public function files(Request $request, Response $response): Response
     {
-        return $response;
-        // $category = $request->getAttribute('category');
-        // $imageName = $request->getAttribute('image');
+        $category = $request->getAttribute('category');
+        $imageName = $request->getAttribute('image');
 
-        // $path = STORAGE_PATH . '/' . $category . '/' . $imageName;
-
-        // if (in_array($category, ['posts', 'avatars'])) {
-        //     if ($category == 'posts') {
-        //         $image = $this->post->getImage($imageName);
-        //     }
-        //     if ($category == 'avatars') {
-        //         $imgPath = $category . DIRECTORY_SEPARATOR . $imageName;
-        //         $image = $this->user->getAvatar($imgPath);
-        //     }
+        $path = STORAGE_PATH . '/' . $category . '/' . $imageName;
+        
+        if (in_array($category, ['posts', 'avatars'])) {
+            if ($category == 'posts') {
+                $image = $this->post->getImage($imageName);
+            }
+            if ($category == 'avatars') {
+                $image = $this->user->getAvatar($imageName);
+            }
             
-        //     if (!$image) {
-        //         return $response->withStatus(404);
-        //     }
-        // } else {
-        //     return $response->withStatus(404);
-        // }
+            if (!$image) {
+                return $response->withStatus(404);
+            }
+        } else {
+            return $response->withStatus(404);
+        }
 
-        // $response->getBody()->write($image);
+        $response->getBody()->write($image);
 
-        // return $response
-        // ->withHeader('Content-Type', mime_content_type($path))
-        // ->withHeader('Content-Length', filesize($path))
-        // ->withHeader('Cache-Control', 'max-age=' . (60 * 60 * 24 * 365))
-        // ->withHeader('Expires', gmdate(DATE_RFC1123, time() + 60 * 60 * 24 * 365))
-        // ->withHeader('Last-Modified', gmdate(DATE_RFC1123, filemtime($path)))
-        // ->withHeader('Pragma', '');
+        return $response
+        ->withHeader('Content-Type', mime_content_type($path))
+        ->withHeader('Content-Length', filesize($path))
+        ->withHeader('Cache-Control', 'max-age=' . (60 * 60 * 24 * 365))
+        ->withHeader('Expires', gmdate(DATE_RFC1123, time() + 60 * 60 * 24 * 365))
+        ->withHeader('Last-Modified', gmdate(DATE_RFC1123, filemtime($path)))
+        ->withHeader('Pragma', '');
     }
 }
