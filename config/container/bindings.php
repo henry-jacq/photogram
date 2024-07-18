@@ -12,6 +12,7 @@ use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use App\Interfaces\SessionInterface;
 use App\Services\PostService;
+use App\Services\UserService;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
@@ -58,5 +59,8 @@ return [
     },
     PostService::class => function (ContainerInterface $container) {
         return new PostService($container->get(EntityManager::class));
+    },
+    UserService::class => function (ContainerInterface $container) {
+        return new UserService($container->get(EntityManager::class));
     }
 ];
