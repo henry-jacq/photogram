@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Core\View;
-use App\Model\Post;
-use App\Model\User;
 use App\Core\Controller;
+use App\Services\PostService;
+use App\Services\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -13,8 +13,8 @@ class ProfileController extends Controller
 {
     public function __construct(
         private readonly View $view,
-        private readonly Post $post,
-        private readonly User $user
+        private readonly PostService $post,
+        private readonly UserService $user
     ) {
         parent::__construct($view);
     }
@@ -23,27 +23,14 @@ class ProfileController extends Controller
     {
         $userData = $request->getAttribute('userData');
         $name = strtolower($request->getAttribute('name'));
-        $profile = $this->user->exists([
-            'username' => $name, 'email' => null
-        ]);
-        $userAvatar = $this->user->getUserAvatar($userData);
-        $profileAvatar = $this->user->getUserAvatar($profile);
 
-        $likes = $this->post->getUserLikesCount($profile['_id']);
-
-        if ($profile) {
-            $args = [
-                'name' => $name,
-                'user' => $userData,
-                'avatar' => $userAvatar,
-                'profileUser' => $profile,
-                'profileLikes' => $likes,
-                'profileAvatar' => $profileAvatar,
-                'title' => ucfirst($name) . "'s Profile",
-                'posts' => $this->post->getUserPosts($profile['_id'])
-            ];
-            return $this->render($response, 'user/profile', $args);
-        }
+        // Only if the user exists else render error page
+        $args = [
+            'name' => $name,
+            'user' => $userData,
+            'title' => ucfirst($name) . "'s Profile"
+        ];
+        return $this->render($response, 'user/profile', $args);
         
         return $this->renderErrorPage($response, ['code' => 404, 'title' => 'Not Found']);
     }
@@ -51,12 +38,10 @@ class ProfileController extends Controller
     public function edit(Request $request, Response $response): Response
     {
         $userData = $request->getAttribute('userData');
-        $avatar = $this->user->getUserAvatar($userData);
 
         $args = [
             'title' => "Edit Profile",
-            'user' => $userData,
-            'avatar' => $avatar
+            'user' => $userData
         ];
         return $this->render($response, 'user/edit', $args);
     }
