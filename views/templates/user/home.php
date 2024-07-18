@@ -12,13 +12,22 @@
             </div>
         </div>
         <hr class="m-0 py-2">
-        <div class="row g-3" id="masonry-area" data-masonry='{ "percentPosition": true }'>
-            <div class="grid-item col-xxl-3 col-lg-4 col-md-6" id="post-78627639">
+        <?php if (!$posts && count($posts) < 1) : ?>
+            <div class="text-center py-5">
+                <i class="bi bi-plus-circle display-4 mb-4"></i>
+                <p class="text-muted text-center align-items-center mb-0 ">Start sharing posts to make it better place!</p>
             </div>
-        </div>
-        <div class="text-center py-5">
-            <i class="bi bi-plus-circle display-4 mb-4"></i>
-            <p class="text-muted text-center align-items-center mb-0 ">Start sharing posts to make it better place!</p>
-        </div>
+        <?php else : ?>
+            <div class="row g-3" id="masonry-area" data-masonry='{ "percentPosition": true }'>
+                <?php foreach ($posts as $p) : ?>
+                    <div class="grid-item col-xxl-3 col-lg-4 col-md-6" id="post-<?= $p->getId() ?>">
+                        <?php $this->renderComponent('card', [
+                            'p' => $p,
+                            'user' => $user
+                        ]); ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
