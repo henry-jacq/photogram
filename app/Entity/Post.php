@@ -19,8 +19,8 @@ class Post
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $caption = null;
 
-    #[ORM\Column(type: 'datetime', name: 'upload_date')]
-    private \DateTime $uploadDate;
+    #[ORM\Column(type: 'datetime', name: 'created_at')]
+    private \DateTime $createdAt;
 
     #[ORM\Column(type: 'boolean', name: 'is_archived', options: ['default' => false])]
     private bool $isArchived;
@@ -68,14 +68,14 @@ class Post
         return $this;
     }
 
-    public function getUploadDate(): \DateTime
+    public function getCreatedAt(): \DateTime
     {
-        return $this->uploadDate;
+        return $this->createdAt;
     }
 
-    public function setUploadDate(\DateTime $uploadDate): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->uploadDate = $uploadDate;
+        $this->createdAt = $createdAt;
         return $this;
     }
 

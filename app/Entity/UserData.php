@@ -56,12 +56,15 @@ class UserData
         return $this;
     }
 
-    public function getProfileAvatar()
+    /**
+     * Return the profile avatar URL
+     */
+    public function getAvatarURL()
     {
         if ($this->profileAvatar == 'default.png') {
             return '/assets/random/default.png';
         }
-        return '/files/avatars/' . $this->getProfileAvatar();
+        return '/files/avatars/' . $this->profileAvatar;
     }
 
     public function setProfileAvatar(?string $profileAvatar): self
