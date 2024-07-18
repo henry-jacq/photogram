@@ -61,7 +61,8 @@ class Image
     public function saveToStorage(string $image_tmp): string
     {
         if (is_file($image_tmp) && exif_imagetype($image_tmp) !== false) {
-            $name = md5(time() . mt_rand(0, 99999));
+            // security through obscurity
+            $name = md5(strlen($this->storage_path) * mt_rand(0, 99999) . time());
             $ext = image_type_to_extension(exif_imagetype($image_tmp));
             $imageName = $name . $ext;
             $image_path = $this->storage_path . $imageName;

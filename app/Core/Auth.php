@@ -46,6 +46,7 @@ class Auth
             $userData = new UserData();
             $userData->setUser($user);
             $userData->setFullName($credentials['fullname']);
+            $userData->setProfileAvatar('default.png');
             $this->manager->persist($userData);
 
             $subscription = new Subscription();
