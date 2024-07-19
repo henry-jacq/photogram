@@ -18,8 +18,8 @@
                     </div>
                     <?php
                     $jobTitle = $p->getUser()->getUserData()->getJobTitle();
-                    if ($jobTitle !== null || $jobTitle !== 'None') : ?>
-                        <p class="mb-0 small fw-light"><?= $p->getUser()->getUserData()->getJobTitle(); ?></p>
+                    if ($jobTitle !== 'None' && $jobTitle !== null) : ?>
+                        <p class="mb-0 small fw-light"><?= $jobTitle ?></p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -128,7 +128,7 @@
         </div>
         <p class="card-text user-select-none fw-semibold mb-2">
             <span class="likedby-users" role="button" data-id="<?= $p->getId() ?>">
-                <span class="like-count me-1"><?= 00 ?></span>Likes
+                <span class="like-count me-1"><?= 0 ?></span>Likes
             </span>
         </p>
         <p class="card-text post-text mb-2"><?= nl2br(hashtag($p->getCaption())); ?></p>
