@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Exception;
+use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\UserData;
 use Doctrine\ORM\EntityManager;
@@ -12,7 +13,9 @@ use Doctrine\ORM\EntityManager;
 
 class UserService
 {
-    // Storage Path for the user avatars
+    /**
+     * Storage Path for the user avatars
+     */
     private string $storagePath = STORAGE_PATH . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR;
 
     public function __construct(private EntityManager $em)
@@ -22,18 +25,9 @@ class UserService
         }
     }
 
-    public function getUserById(int $id): User
-    {
-        $user = $this->em->getRepository(User::class)->find($id);
-        return $user;
-    }
-
-    public function getUserByEmail(string $email): User
-    {
-        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
-        return $user;
-    }
-
+    /**
+     * Create a new user
+     */
     public function createUser(User $user): User
     {
         $this->em->persist($user);
@@ -41,12 +35,18 @@ class UserService
         return $user;
     }
 
+    /**
+     * Delete the user
+     */
     public function deleteUser(User $user): void
     {
         $this->em->remove($user);
         $this->em->flush();
     }
 
+    /**
+     * Update the user data
+     */
     public function updateUserData(User $user, array $data): UserData
     {
         $userData = $user->getUserData();
@@ -76,18 +76,35 @@ class UserService
         return $userData;
     }
 
-    public function fetchAllUsers(): array
+    /**
+     * Get the user by id
+     */
+    public function getUserById(int $id): User
     {
-        $users = $this->em->getRepository(User::class)->findAll();
-        return $users;
+        $user = $this->em->getRepository(User::class)->find($id);
+        return $user;
     }
 
-    public function fetchUserPosts(User $user): array
+    /**
+     * Get the user by email or username
+     */
+    public function getUserByEmailOrUsername(string $emailOrUsername): ?User
     {
-        $posts = $user->getPosts();
-        return iterator_to_array($posts);
+        $user = $this->em->getRepository(User::class)->createQueryBuilder('u')
+        ->where('u.email = :emailOrUsername')
+        ->orWhere('u.username = :emailOrUsername')
+        ->setParameter('emailOrUsername',
+            $emailOrUsername
+        )
+        ->getQuery()
+        ->getOneOrNullResult();
+
+        return $user;
     }
 
+    /**
+     * Return the avatar image
+     */
     public function getAvatar(string $imageName)
     {
         $filePath = STORAGE_PATH . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR . $imageName;
@@ -139,5 +156,17 @@ class UserService
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function fetchAllUsers(): array
+    {
+        $users = $this->em->getRepository(User::class)->findAll();
+        return $users;
+    }
+
+    public function fetchUserPosts(User $user): array
+    {
+        $posts = $this->em->getRepository(Post::class)->findBy(['user' => $user], ['createdAt' => 'DESC']);
+        return $posts;
     }
 }

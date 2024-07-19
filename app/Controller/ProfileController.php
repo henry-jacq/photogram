@@ -23,14 +23,20 @@ class ProfileController extends Controller
     {
         $userData = $request->getAttribute('userData');
         $name = strtolower($request->getAttribute('name'));
+        $profileUser = $this->user->getUserByEmailOrUsername($name);
+        $posts = $this->user->fetchUserPosts($profileUser);
 
         // Only if the user exists else render error page
-        $args = [
-            'name' => $name,
-            'user' => $userData,
-            'title' => ucfirst($name) . "'s Profile"
-        ];
-        return $this->render($response, 'user/profile', $args);
+        if ($profileUser) {
+            $args = [
+                'name' => $name,
+                'user' => $userData,
+                'profileUser' => $profileUser,
+                'posts' => $posts,
+                'title' => ucfirst($name) . "'s Profile"
+            ];
+            return $this->render($response, 'user/profile', $args);
+        }
         
         return $this->renderErrorPage($response, ['code' => 404, 'title' => 'Not Found']);
     }
