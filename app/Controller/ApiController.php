@@ -8,6 +8,7 @@ use App\Core\View;
 use App\Entity\User;
 use App\Core\Session;
 use App\Services\PostService;
+use App\Services\UserService;
 use InvalidArgumentException;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -44,7 +45,8 @@ class ApiController
         private readonly EntityManager $manager,
         private readonly View $view,
         private readonly Session $session,
-        private readonly PostService $post
+        private readonly PostService $post,
+        private readonly UserService $user,
     )
     {
     }
@@ -134,15 +136,18 @@ class ApiController
 
     /**
      * Check if parameter exists in parsed body
+     * 
+     * @param array $params
+     * @param bool $checkEmpty
      */
-    public function paramsExists(array $params)
+    public function paramsExists(array $params, $checkEmpty=true)
     {
         $exists = true;
         if ($this->data == null) {
             return false;
         }
         foreach ($params as $param) {
-            if (!array_key_exists($param, $this->data) || empty($this->data[$param])) {
+            if (!array_key_exists($param, $this->data) || $checkEmpty && empty($this->data[$param])) {
                 $exists = false;
             }
         }

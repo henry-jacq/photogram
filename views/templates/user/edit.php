@@ -26,8 +26,8 @@
                     <?php endif; ?>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="fname" class="form-label fw-semibold">Full Name</label>
-                    <input type="text" id="fname" class="form-control" name="fname" placeholder="Full name" aria-label="Full name" value="<?php echo $userData->getFullName(); ?>">
+                    <label for="fullName" class="form-label fw-semibold">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" name="fullname" placeholder="Full name" aria-label="Full name" value="<?php echo $userData->getFullName(); ?>">
                 </div>
                 <div class="form-group mb-3">
                     <label for="website" class="form-label fw-semibold">Website</label>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="job" class="form-label fw-semibold">Job title</label>
-                    <select id="job" class="form-select" name="job" aria-label="Default select example">
+                    <select id="jobTitle" class="form-select" name="jobTitle" aria-label="Select Job Title">
                         <option <?php if (is_null($userData->getJobTitle()) || $userData->getJobTitle() == 'None') echo 'selected'; ?>>None</option>
                         <option <?php if ($userData->getJobTitle() == 'App Developer') echo 'selected'; ?>>App Developer</option>
                         <option <?php if ($userData->getJobTitle() == 'Content Creator') echo 'selected'; ?>>Content Creator</option>
@@ -56,12 +56,12 @@
                     <input id="location" class="form-control" type="text" name="location" spellcheck="false" placeholder="City, Country" value="<?php echo $userData->getLocation(); ?>">
                 </div>
                 <div class="form-group mb-3">
-                    <label for="twitter" class="form-label fw-semibold">Linkedin</label>
-                    <input id="twitter" class="form-control" type="text" name="twitter" spellcheck="false" placeholder="https://linkedin.com/in/username" value="<?php echo $userData->getLinkedinHandle(); ?>">
+                    <label for="linkedin" class="form-label fw-semibold">Linkedin</label>
+                    <input id="linkedin" class="form-control" type="text" name="linkedin" spellcheck="false" placeholder="https://linkedin.com/in/username" value="<?php echo $userData->getLinkedin(); ?>">
                 </div>
                 <div class="form-group mb-4">
                     <label for="instagram" class="form-label fw-medium">Instagram</label>
-                    <input id="instagram" class="form-control" type="text" name="instagram" spellcheck="false" placeholder="https://instagram.com/username" value="<?php echo $userData->getInstagramHandle(); ?>">
+                    <input id="instagram" class="form-control" type="text" name="instagram" spellcheck="false" placeholder="https://instagram.com/username" value="<?php echo $userData->getInstagram(); ?>">
                 </div>
                 <div class="d-flex justify-content-start gap-2">
                     <button class="btn btn-prime btn-save-data" type="button">Update profile</button>

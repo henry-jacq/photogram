@@ -45,12 +45,12 @@ class UserData
         return $this;
     }
 
-    public function getFullName(): ?string
+    public function getFullname(): ?string
     {
         return $this->fullName;
     }
 
-    public function setFullName(?string $fullName): self
+    public function setFullname(?string $fullName): self
     {
         $this->fullName = $fullName;
         return $this;
@@ -65,6 +65,14 @@ class UserData
             return '/assets/random/default.png';
         }
         return '/files/avatars/' . $this->profileAvatar;
+    }
+
+    /**
+     * Return the profile avatar name
+     */
+    public function getProfileAvatar()
+    {
+        return $this->profileAvatar;
     }
 
     public function setProfileAvatar(?string $profileAvatar): self
@@ -117,23 +125,23 @@ class UserData
         return $this;
     }
 
-    public function getInstagramHandle(): ?string
+    public function getInstagram(): ?string
     {
         return $this->instagramHandle;
     }
 
-    public function setInstagramHandle(?string $instagramHandle): self
+    public function setInstagram(?string $instagramHandle): self
     {
         $this->instagramHandle = $instagramHandle;
         return $this;
     }
 
-    public function getLinkedinHandle(): ?string
+    public function getLinkedin(): ?string
     {
         return $this->linkedinHandle;
     }
 
-    public function setLinkedinHandle(?string $linkedinHandle): self
+    public function setLinkedin(?string $linkedinHandle): self
     {
         $this->linkedinHandle = $linkedinHandle;
         return $this;

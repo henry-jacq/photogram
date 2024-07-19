@@ -4,14 +4,22 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Exception;
 use App\Entity\User;
+use App\Entity\UserData;
 use Doctrine\ORM\EntityManager;
 
 
 class UserService
 {
+    // Storage Path for the user avatars
+    private string $storagePath = STORAGE_PATH . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR;
+
     public function __construct(private EntityManager $em)
     {
+        if (!file_exists($this->storagePath)) {
+            mkdir($this->storagePath);
+        }
     }
 
     public function getUserById(int $id): User
@@ -33,17 +41,39 @@ class UserService
         return $user;
     }
 
-    public function updateUser(User $user): User
-    {
-        $this->em->persist($user);
-        $this->em->flush();
-        return $user;
-    }
-
     public function deleteUser(User $user): void
     {
         $this->em->remove($user);
         $this->em->flush();
+    }
+
+    public function updateUserData(User $user, array $data): UserData
+    {
+        $userData = $user->getUserData();
+        $originalData = clone $userData; // Create a copy of the original user data
+
+        $fields = ['fullname', 'website', 'jobTitle', 'bio', 'location', 'linkedin', 'instagram'];
+
+        foreach ($fields as $field) {
+            $userData->{"set" . ucfirst($field)}($data[$field]);
+        }
+        
+        // If uploaded avatar is valid, set it
+        if ($data['avatar']->getError() === UPLOAD_ERR_OK) {
+            if ($userData->getProfileAvatar() !== 'default.png') {
+                $this->deleteAvatar($userData);
+            }
+            $name = $this->saveAvatar($data['avatar']->getFilePath());
+            $userData->setProfileAvatar($name);
+        }
+
+        // Check if the user data has been modified
+        if ($userData != $originalData) {
+            $this->em->persist($userData);
+            $this->em->flush();
+        }
+
+        return $userData;
     }
 
     public function fetchAllUsers(): array
@@ -67,5 +97,47 @@ class UserService
         }
 
         return false;
+    }
+
+    /**
+     * Store the image to the storage folder
+     */
+    public function saveAvatar(string $image_tmp): string
+    {
+        if (is_file($image_tmp) && exif_imagetype($image_tmp) !== false) {
+            // security through obscurity
+            $name = md5(strlen($this->storagePath) * mt_rand(0, 99999) . time());
+            $ext = image_type_to_extension(exif_imagetype($image_tmp));
+            $imageName = $name . $ext;
+            $image_path = $this->storagePath . $imageName;
+
+            if (move_uploaded_file($image_tmp, $image_path)) {
+                return $imageName;
+            }
+
+            throw new Exception("Can't move the uploaded file");
+        } else {
+            throw new Exception("Not a valid avatar path!");
+        }
+    }
+
+    /**
+     * Delete the user avatar from the storage folder
+     */
+    public function deleteAvatar(UserData $ud)
+    {
+        try {
+            $image_path = $this->storagePath . $ud->getProfileAvatar();
+            if (file_exists($image_path)) {
+                try {
+                    unlink($image_path);
+                } catch (Exception $e) {
+                    throw new Exception('Cannot remove avatar: ' . $image_path);
+                }
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }
