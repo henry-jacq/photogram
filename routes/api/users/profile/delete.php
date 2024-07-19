@@ -2,10 +2,16 @@
 
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->isMethod('POST')) {
-
-        $this->user->deleteAvatar(
-            $this->getUserId()
-        );
+        // Get the user data
+        $ud = $this->getUser()->getUserData();
+        
+        // Delete the avatar from the storage folder
+        $this->user->deleteAvatar($ud);
+        
+        // Set the default avatar
+        $ud->setProfileAvatar('default.png');
+        $this->manager->persist($ud);
+        $this->manager->flush();
 
         return $this->response([
             'message' => true
