@@ -54,9 +54,17 @@
                             </a>
                         </li>
                         <li data-id="<?= $p->getId() ?>">
-                            <a class="dropdown-item btn-toggle-comment" role="button">
-                                <i class="fa-solid fa-comment-slash fa-sm" aria-hidden="true"></i>
-                                <span class="ms-2">Turn off comment</span>
+                            <li data-id="<?= $p->getId() ?>">
+                                <a class="dropdown-item btn-archive-post" role="button" data-archived="<?= $p->getIsArchived() ?>">
+                                    <?php if ($p->getIsArchived()) : ?>
+                                        <i class="fa-solid fa-plus"></i>
+                                        <span class="ms-2">Show on Profile</span>
+                                    <?php else: ?>
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                        <span class="ms-2">Archive</span>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
                             </a>
                         </li>
                         <li>

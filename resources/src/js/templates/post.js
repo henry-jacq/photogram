@@ -342,3 +342,70 @@ $('.btn-edit-post').on('click', function () {
         charCount.text(`${$(this).val().length}/${maxLength}`);
     });
 });
+
+// Archive or unarchive post
+$('.btn-archive-post').on('click', function () {
+    let post_id = $(this).parent().attr('data-id');
+    let isArchived = $(this).attr('data-archived');
+    let heading, message;
+
+    if (isArchived === '1') {
+        heading = 'Unarchive Post';
+        message = `<p>Are you sure you want to unarchive this post?</p>
+        <p>Once unarchived, this post will be visible on your profile.</p>`;
+    } else {
+        heading = 'Archive Post';
+        message = `  <p>Are you sure you want to archive this post?</p>
+        <p>Once archived, this post will no longer be visible on your profile.</p>`;
+    }
+
+    let spinner = `<div class="spinner-border spinner-border-sm me-2" role="status"></div>`;
+
+    let d = new Dialog('<i class="fa-solid fa-clock-rotate-left me-2"></i>'+heading, message);
+    d.setButtons([
+        {
+            'name': "Cancel",
+            "class": "btn-secondary",
+            "onClick": function (event) {
+                $(event.data.modal).modal('hide');
+            }
+        },
+        {
+            'name': heading,
+            "class": "btn-success",
+            "onClick": function (event) {
+                let archiveButton = $(event.target);
+                archiveButton.prop('disabled', true);
+                archiveButton.html(spinner + (isArchived === '1' ? 'Unarchiving' : 'Archiving'));
+
+                $.ajax({
+                    url: '/api/posts/archive',
+                    type: 'POST',
+                    data: {
+                        post_id: post_id
+                    },
+                    success: function (data, textStatus) {
+                        if (data.message === true && textStatus === "success") {
+                            successAudio[0].play();
+                            if ($('#masonry-area').length !== 0) {
+                                var sl = $('#post-' + post_id);
+                                $grid.masonry('remove', sl);
+                                $grid.masonry('layout');
+                            } else {
+                                location.reload();
+                            }
+                            showToast("Photogram", "Just Now", `Your post was successfully ${isArchived === '1' ? 'unarchived' : 'archived'}!`);
+                        } else {
+                            showToast("Photogram", "Just Now", "Can't archive your post!");
+                        }
+                        $(event.data.modal).modal('hide');
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        showToast("Photogram", "Just Now", errorThrown);
+                    }
+                });
+            }
+        }
+    ]);
+    d.show();
+});

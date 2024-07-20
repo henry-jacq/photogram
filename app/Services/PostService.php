@@ -254,4 +254,56 @@ class PostService
         $this->em->flush();
         return true;
     }
+
+    /**
+     * Archive or Unarchive the post
+     */
+    public function togglePostArchive(int $postId, User $user): bool
+    {
+        $post = $this->getPostById($postId);
+        if (!$post) {
+            throw new Exception("Post not found.");
+        }
+
+        // To prevent unauthorized access
+        if ($post->getUser()->getId() !== $user->getId()) {
+            throw new Exception("Unauthorized.");
+        }
+
+        $post->setIsArchived(!$post->getIsArchived());
+        $this->em->persist($post);
+        $this->em->flush();
+        return true;
+    }
+
+    public function fetchArchivedPosts(User $user): array
+    {
+        return $this->em->getRepository(Post::class)->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->andWhere('p.isArchived = 1')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function fetchUserPosts(User $user): array
+    {
+        return $this->em->getRepository(Post::class)->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->andWhere('p.isArchived = 0')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function fetchUserLikedPosts(User $user): array
+    {
+        return $this->em->getRepository(Post::class)->createQueryBuilder('p')
+            ->join('p.likes', 'l')
+            ->where('l.likedUser = :user')
+            ->andWhere('p.isArchived = 0')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }
