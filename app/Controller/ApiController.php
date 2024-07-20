@@ -312,8 +312,7 @@ class ApiController
      */
     public function getUser()
     {
-        $user = $this->manager->getRepository(User::class)->findOneBy(['id' => $this->getUserId()]);
-        return $user;
+        return $this->slimRequest->getAttribute('userData');
     }
     
     /**
