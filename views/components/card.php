@@ -112,7 +112,7 @@
                 <!-- btn fs-5 mb-1 p-0 border-0 fa-solid fa-heart text-danger -->
                 <a id="like-<?= $p->getId() ?>" role="button">
                     <?php
-                    if (in_array($user, $p->getLikedUsers()->toArray())) : ?>
+                    if (in_array($user, $p->getLikedUsers())) : ?>
                         <i class="btn fs-5 mb-1 p-0 border-0 fa-solid fa-heart text-danger" aria-hidden="true"></i>
                     <?php else : ?>
                         <i class="btn fs-5 mb-1 p-0 border-0 fa-regular fa-heart" aria-hidden="true"></i>

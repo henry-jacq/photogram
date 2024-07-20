@@ -5,17 +5,16 @@ ${basename(__FILE__, '.php')} = function () {
         if ($this->paramsExists(['id', 'text'])) {
             
             $pid = $this->data['id'];
-            $pdata = $this->post->getPostById($pid);
+            $post = $this->post->getPostById($pid);
+            $caption = htmlspecialchars($this->data['text']);
 
-            if ($pdata['user_id'] !== $this->getUserId()) {
+            if ($post->getUser() !== $this->getUser()) {
                 return $this->response([
                     'message' => 'Not Modified'
                 ], 304);
             }
             
-            $text = htmlspecialchars($this->data['text']);
-            
-            $result = $this->post->updatePostText($pid, $text);
+            $result = $this->post->updatePostCaption($post, $caption);
             
             return $this->response([
                 'message' => $result

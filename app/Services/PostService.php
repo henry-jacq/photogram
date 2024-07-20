@@ -246,4 +246,12 @@ class PostService
 
         return true;
     }
+
+    public function updatePostCaption(Post $post, string $caption): bool
+    {
+        $post->setCaption($caption);
+        $this->em->persist($post);
+        $this->em->flush();
+        return true;
+    }
 }
