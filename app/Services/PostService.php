@@ -131,6 +131,9 @@ class PostService
             ->getResult();
     }
 
+    /**
+     * Like or Unlike the post
+     */
     public function toggleLikes(int $postId, User $likedUser): bool
     {
         $post = $this->getPostById($postId);
@@ -159,9 +162,26 @@ class PostService
         return true;
     }
 
+    /**
+     * Get all the users who liked the post
+     */
     public function fetchLikedUsers(int $postId): array
     {
         $post = $this->getPostById($postId);
         return $post ? $post->getLikedUsers()->toArray() : [];
+    }
+
+    /**
+     * Get total likes of the user's posts
+     */
+    public function getTotalUserLikes(User $user): int
+    {
+        $qb = $this->em->getRepository(Post::class)->createQueryBuilder('p')
+            ->select('COUNT(l.id) as totalLikes')
+            ->join('p.likes', 'l')
+            ->where('p.user = :userId')
+            ->setParameter('userId', $user->getId());
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

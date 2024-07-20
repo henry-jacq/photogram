@@ -51,7 +51,7 @@
                     </div>
                     <div class="vr"></div>
                     <div class="text-center text-body-emphasis px-2">
-                        <h6 class="mb-0">0</h6>
+                        <h6 class="mb-0"><?= $totalLikes ?></h6>
                         <small>Likes</small>
                     </div>
                     <div class="vr"></div>
@@ -71,10 +71,10 @@
             <h4 class="fw-normal">Posts</h4>
         </div>
         <hr class="mt-2 mb-3">
-        <div class="user-posts-section">
+        <div class="user-posts-section mb-5">
             <?php
             if ($posts !== false && count($posts) > 0) { ?>
-                <div class="row g-3" id="masonry-area">
+                <div class="row g-3" id="masonry-area" data-masonry='{ "percentPosition": true }'>
                     <?php
                     foreach ($posts as $post) : ?>
                         <div class="col-xxl-3 col-lg-4 col-md-6" id="post-<?= $post->getId() ?>">

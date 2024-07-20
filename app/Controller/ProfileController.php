@@ -25,6 +25,7 @@ class ProfileController extends Controller
         $name = strtolower($request->getAttribute('name'));
         $profileUser = $this->user->getUserByEmailOrUsername($name);
         $posts = $this->user->fetchUserPosts($profileUser);
+        $totalLikes = $this->post->getTotalUserLikes($profileUser);
 
         // Only if the user exists else render error page
         if ($profileUser) {
@@ -33,6 +34,7 @@ class ProfileController extends Controller
                 'user' => $userData,
                 'profileUser' => $profileUser,
                 'posts' => $posts,
+                'totalLikes' => $totalLikes,
                 'title' => ucfirst($name) . "'s Profile"
             ];
             return $this->render($response, 'user/profile', $args);

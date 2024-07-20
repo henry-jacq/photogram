@@ -8,7 +8,7 @@
                 </div>
                 <div class="skeleton-header">
                     <div class="nav nav-divider">
-                        <h7 class="nav-item card-title mb-0"> <a href="/profile/<?= $p->getUser()->getUsername() ?>" class="text-decoration-none" style="color: var(--bs-dark-text)"><?= ucfirst($p->getUser()->getUsername()) ?></a>
+                        <h7 class="nav-item card-title mb-0"> <a href="/profile/<?= $p->getUser()->getUsername() ?>" class="text-decoration-none link-body-emphasis" style="color: var(--bs-dark-text)"><?= ucfirst($p->getUser()->getUsername()) ?></a>
                         </h7>
 
                         <div class="ms-1 align-items-center justify-content-between">
@@ -108,14 +108,14 @@
     <?php endif; ?>
     <div class="card-body px-3 py-2">
         <div class="btn-group fs-5 user-select-none w-100 gap-3 mb-1">
-            <div class="btn-like" data-id="<?= $p->getId() ?>">
+            <div class="btn-like link-body-emphasis" data-id="<?= $p->getId() ?>">
                 <!-- btn fs-5 mb-1 p-0 border-0 fa-solid fa-heart text-danger -->
                 <a id="like-<?= $p->getId() ?>" role="button">
                     <?php
                     if (in_array($user, $p->getLikedUsers()->toArray())) : ?>
                         <i class="btn fs-5 mb-1 p-0 border-0 fa-solid fa-heart text-danger" aria-hidden="true"></i>
-                        <?php else : ?>
-                            <i class="btn fs-5 mb-1 p-0 border-0 fa-regular fa-heart" aria-hidden="true"></i>
+                    <?php else : ?>
+                        <i class="btn fs-5 mb-1 p-0 border-0 fa-regular fa-heart" aria-hidden="true"></i>
                     <?php endif; ?>
                 </a>
             </div>
@@ -127,7 +127,7 @@
             </div>
         </div>
         <p class="card-text user-select-none fw-semibold mb-2">
-            <span class="likedby-users" role="button" data-id="<?= $p->getId() ?>">
+            <span class="likedby-users link-body-emphasis" role="button" data-id="<?= $p->getId() ?>">
                 <span class="like-count me-1"><?= $p->getLikesCount() ?></span>Likes
             </span>
         </p>

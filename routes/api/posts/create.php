@@ -16,7 +16,7 @@ ${basename(__FILE__, '.php')} = function () {
         $data = [
             'images' => $paths,
             'user' => $this->getUser(),
-            'text' => $this->data['post_text'],
+            'caption' => $this->data['post_text'],
         ];
 
         if ($this->post->createPost($data)) {
