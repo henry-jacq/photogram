@@ -12,15 +12,15 @@ class Comment
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private Post $post;
+    private ?Post $post;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'post_owner_id', referencedColumnName: 'id', nullable: false)]
-    private User $postOwner;
+    private ?User $postOwner;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'comment_user_id', referencedColumnName: 'id', nullable: false)]
-    private User $commentUser;
+    private ?User $commentUser;
 
     #[ORM\Column(type: 'text')]
     private string $content;

@@ -9,6 +9,7 @@ use App\Entity\Like;
 use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\Comment;
 use Doctrine\ORM\EntityManager;
 
 
@@ -183,5 +184,59 @@ class PostService
             ->setParameter('userId', $user->getId());
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Add a comment to the post
+     */
+    public function addComment(int $postId, string $content, User $user): int
+    {
+        $post = $this->getPostById($postId);
+        if (!$post) {
+            throw new Exception("Post not found.");
+        }
+
+        $comment = new Comment();
+        $comment->setPost($post);
+        $comment->setPostOwner($post->getUser());
+        $comment->setCommentUser($user);
+        $comment->setContent($content);
+        $comment->setCommentDate(new \DateTime());
+
+        $this->em->persist($comment);
+        $this->em->flush();
+
+        return $comment->getId() ?? false;
+    }
+
+    /**
+     * Get all the comments of the post
+     */
+    public function fetchComments(int $postId): array
+    {
+        $post = $this->getPostById($postId);
+        return $post ? $post->getComments()->toArray() : [];
+    }
+
+    /**
+     * Delete the comment from the post
+     */
+    public function deleteComment(int $postId, int $commentId): bool
+    {
+        $post = $this->getPostById($postId);
+        if (!$post) {
+            throw new Exception("Post not found.");
+        }
+
+        $comment = $this->em->getRepository(Comment::class)->find($commentId);
+        if (!$comment) {
+            throw new Exception("Comment not found.");
+        }
+
+        $post->removeComment($comment);
+        $this->em->remove($comment);
+        $this->em->flush();
+
+        return true;
     }
 }

@@ -3,20 +3,18 @@
 ${basename(__FILE__, '.php')} = function () {
     if ($this->paramsExists(['pid', 'comment']) && $this->isMethod('POST')) {
         $pid = $this->data['pid'];
-        $uid = $this->getUserId();
-        $user = $this->user->getUser();
-        $avatar = $this->user->getUserAvatar($user);
         $text = $this->data['comment'];
-
-        $result = $this->post->addComment($pid, $uid, $text);
+        $commentedUser = $this->getUser();
+        $avatar = $commentedUser->getUserData()->getAvatarURL();
+        $commentId = $this->post->addComment($pid, $text, $commentedUser);
         
-        if ($result !== false) {
+        if ($commentId !== false) {
             return $this->response([
                 'message' => true,
-                'username' => $user['username'],
-                'fullname' => $user['fullname'],
+                'username' => $commentedUser->getUsername(),
+                'fullname' => $commentedUser->getUserData()->getFullname(),
                 'avatar' => $avatar,
-                'comment_id' => $result
+                'comment_id' => $commentId
             ], 200);
         }
 

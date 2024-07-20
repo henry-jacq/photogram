@@ -8,15 +8,15 @@ ${basename(__FILE__, '.php')} = function () {
 
             $pid = $this->data['likes'];
             
-            $data = $this->post->getLikedUsers($pid);
+            $data = $this->post->fetchLikedUsers($pid);
 
             $output = [];
 
             foreach ($data as $userId => $user) {
                 $output[] = [
-                    'username' => $user['username'],
-                    'fullname' => $user['fullname'],
-                    'avatar' => $this->user->getUserAvatar($user),
+                    'username' => $user->getUsername(),
+                    'fullname' => $user->getUserData()->getFullname(),
+                    'avatar' => $user->getUserData()->getAvatarURL(),
                 ];
             }
 
@@ -32,24 +32,21 @@ ${basename(__FILE__, '.php')} = function () {
         if ($this->paramsExists(['comments'])) {
             
             $pid = $this->data['comments'];
-            $user = (array) $this->user->getUser();
+            $user = $this->getUser();
 
             $comments = $this->post->fetchComments($pid);
-
-            $uids = array_column($comments, 'uid');
-            $usersData = $this->post->getUsersByIds($uids);
 
             $msg = empty($comments) ? false : true;
 
             $commentData = [];
             foreach ($comments as $comment) {
-                $userData = $usersData[$comment['uid']];
-                $commentId = (string) $comment['_id'];
-                $commentText = $comment['text'];
-                $timestamp = $this->post->getHumanTime($comment['timestamp']);
-                $username = $userData['username'];
-                $fullname = $userData['fullname'];
-                $avatar = $this->user->getUserAvatar($userData);
+                $userData = $comment->getCommentUser();
+                $commentId = $comment->getId();
+                $commentText = $comment->getContent();
+                $timestamp = getHumanDiffTime($comment->getCommentDate()->format('Y-m-d H:i:s'));
+                $username = $userData->getUsername();
+                $fullname = $userData->getUserData()->getFullname();
+                $avatar = $userData->getUserData()->getAvatarURL();
 
                 $commentArray = [
                     'comment' => $commentText,
@@ -59,7 +56,7 @@ ${basename(__FILE__, '.php')} = function () {
                     'avatar' => $avatar
                 ];
 
-                if ($user['username'] === $username) {
+                if ($user->getUsername() === $username) {
                     $commentArray['comment_id'] = $commentId;
                 }
 
@@ -75,8 +72,8 @@ ${basename(__FILE__, '.php')} = function () {
             $data = [
                 'message' => $msg,
                 'owner' => [
-                    'username' => $user['username'],
-                    'avatar' => $this->user->getUserAvatar($user)
+                    'username' => $user->getUsername(),
+                    'avatar' => $user->getUserData()->getAvatarURL()
                 ],
                 'comments' => $userComments
             ];
