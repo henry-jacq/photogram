@@ -127,63 +127,13 @@ class Post
     /**
      * Get the users who liked this post
      */
-    public function getLikedUsers(): Collection
+    public function getLikedUsers(): array
     {
-        return $this->likes->map(function (Like $like) {
+        $likedUsers = $this->likes->map(function (Like $like) {
             return $like->getLikedUser();
         });
+
+        return array_reverse($likedUsers->toArray());
     }
-
-    /**
-     * Add a like to this post
-     */
-    public function addLike(Like $like): self
-    {
-        if (!$this->likes->contains($like)) {
-            $this->likes[] = $like;
-            $like->setPost($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a like from this post
-     */
-    public function removeLike(Like $like): self
-    {
-        if ($this->likes->removeElement($like)) {
-            if ($like->getPost() === $this) {
-                $like->setPost(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    public function addComment(Comment $comment): self
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments[] = $comment;
-            $comment->setPost($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComment(Comment $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            if ($comment->getPost() === $this) {
-                $comment->setPost(null);
-            }
-        }
-
-        return $this;
-    }
+    
 }

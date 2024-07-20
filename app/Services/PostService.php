@@ -148,14 +148,12 @@ class PostService
         ]);
 
         if ($like) {
-            $post->removeLike($like);
             $this->em->remove($like);
         } else {
             $like = new Like();
             $like->setPost($post);
             $like->setLikedUser($likedUser);
             $like->setPostOwner($post->getUser());
-            $post->addLike($like);
             $this->em->persist($like);
         }
 
@@ -169,7 +167,7 @@ class PostService
     public function fetchLikedUsers(int $postId): array
     {
         $post = $this->getPostById($postId);
-        return $post ? $post->getLikedUsers()->toArray() : [];
+        return $post ? $post->getLikedUsers() : [];
     }
 
     /**
@@ -215,7 +213,17 @@ class PostService
     public function fetchComments(int $postId): array
     {
         $post = $this->getPostById($postId);
-        return $post ? $post->getComments()->toArray() : [];
+
+        if (!$post) {
+            throw new Exception("Post not found.");
+        }
+
+        return $this->em->getRepository(Comment::class)->createQueryBuilder('c')
+            ->where('c.post = :post')
+            ->setParameter('post', $post)
+            ->orderBy('c.commentDate', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**
@@ -233,7 +241,6 @@ class PostService
             throw new Exception("Comment not found.");
         }
 
-        $post->removeComment($comment);
         $this->em->remove($comment);
         $this->em->flush();
 
