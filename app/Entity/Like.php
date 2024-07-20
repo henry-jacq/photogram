@@ -12,15 +12,15 @@ class Like
 
     #[ORM\ManyToOne(targetEntity: Post::class, inversedBy: 'likes')]
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private Post $post;
+    private ?Post $post;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'post_owner_id', referencedColumnName: 'id', nullable: false)]
-    private User $postOwner;
+    private ?User $postOwner;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'liked_user_id', referencedColumnName: 'id', nullable: false)]
-    private User $likedUser;
+    private ?User $likedUser;
 
     public function getId(): int
     {
@@ -43,7 +43,7 @@ class Like
         return $this->postOwner;
     }
 
-    public function setPostOwner(User $postOwner): self
+    public function setPostOwner(?User $postOwner): self
     {
         $this->postOwner = $postOwner;
         return $this;
@@ -54,7 +54,7 @@ class Like
         return $this->likedUser;
     }
 
-    public function setLikedUser(User $likedUser): self
+    public function setLikedUser(?User $likedUser): self
     {
         $this->likedUser = $likedUser;
         return $this;

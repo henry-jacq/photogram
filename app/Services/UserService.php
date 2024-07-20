@@ -21,7 +21,7 @@ class UserService
     public function __construct(private EntityManager $em)
     {
         if (!file_exists($this->storagePath)) {
-            mkdir($this->storagePath);
+            mkdir($this->storagePath, 0777, true);
         }
     }
 

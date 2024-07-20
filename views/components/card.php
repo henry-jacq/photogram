@@ -112,7 +112,7 @@
                 <!-- btn fs-5 mb-1 p-0 border-0 fa-solid fa-heart text-danger -->
                 <a id="like-<?= $p->getId() ?>" role="button">
                     <?php
-                    if (in_array($user->getId(), [])) : ?>
+                    if (in_array($user, $p->getLikedUsers()->toArray())) : ?>
                         <i class="btn fs-5 mb-1 p-0 border-0 fa-solid fa-heart text-danger" aria-hidden="true"></i>
                         <?php else : ?>
                             <i class="btn fs-5 mb-1 p-0 border-0 fa-regular fa-heart" aria-hidden="true"></i>
@@ -128,7 +128,7 @@
         </div>
         <p class="card-text user-select-none fw-semibold mb-2">
             <span class="likedby-users" role="button" data-id="<?= $p->getId() ?>">
-                <span class="like-count me-1"><?= 0 ?></span>Likes
+                <span class="like-count me-1"><?= $p->getLikesCount() ?></span>Likes
             </span>
         </p>
         <p class="card-text post-text mb-2"><?= nl2br(hashtag($p->getCaption())); ?></p>

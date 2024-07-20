@@ -4,8 +4,8 @@ ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->isMethod('POST')) {
         if ($this->paramsExists(['id'])) {
             $pid = $this->data['id'];
-            $uid = $this->getUserId();
-            $result = $this->post->toggleLikes($pid, $uid);
+            $user = $this->getUser();
+            $result = $this->post->toggleLikes($pid, $user);
 
             return $this->response([
                 'message' => $result

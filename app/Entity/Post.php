@@ -105,11 +105,6 @@ class Post
         return $this;
     }
 
-    /**
-     * Remove image before post get deleted
-     * 
-     * Not Used So Far
-     */
     public function removeImage(Image $image): self
     {
         if ($this->images->removeElement($image)) {
@@ -121,11 +116,27 @@ class Post
         return $this;
     }
 
-    public function getLikes(): Collection
+    /**
+     * Get the number of likes for this post
+     */
+    public function getLikesCount(): int
     {
-        return $this->likes;
+        return count($this->likes);
     }
 
+    /**
+     * Get the users who liked this post
+     */
+    public function getLikedUsers(): Collection
+    {
+        return $this->likes->map(function (Like $like) {
+            return $like->getLikedUser();
+        });
+    }
+
+    /**
+     * Add a like to this post
+     */
     public function addLike(Like $like): self
     {
         if (!$this->likes->contains($like)) {
@@ -136,6 +147,9 @@ class Post
         return $this;
     }
 
+    /**
+     * Remove a like from this post
+     */
     public function removeLike(Like $like): self
     {
         if ($this->likes->removeElement($like)) {
