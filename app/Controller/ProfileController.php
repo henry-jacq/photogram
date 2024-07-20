@@ -24,7 +24,7 @@ class ProfileController extends Controller
         $userData = $request->getAttribute('userData');
         $name = strtolower($request->getAttribute('name'));
         $profileUser = $this->user->getUserByEmailOrUsername($name);
-        $posts = $this->user->fetchUserPosts($profileUser);
+        $posts = $this->post->fetchUserPosts($profileUser);
         $totalLikes = $this->post->getTotalUserLikes($profileUser);
 
         // Only if the user exists else render error page

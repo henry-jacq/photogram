@@ -122,17 +122,6 @@ class PostService
     }
 
     /**
-     * Return all recent posts
-     */
-    public function fetchAllPosts(): array
-    {
-        return $this->em->getRepository(Post::class)->createQueryBuilder('p')
-            ->orderBy('p.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
      * Like or Unlike the post
      */
     public function toggleLikes(int $postId, User $likedUser): bool
@@ -179,6 +168,7 @@ class PostService
             ->select('COUNT(l.id) as totalLikes')
             ->join('p.likes', 'l')
             ->where('p.user = :userId')
+            ->andWhere('p.isArchived = 0')
             ->setParameter('userId', $user->getId());
 
         return (int) $qb->getQuery()->getSingleScalarResult();
@@ -247,6 +237,9 @@ class PostService
         return true;
     }
 
+    /**
+     * Update the post caption
+     */
     public function updatePostCaption(Post $post, string $caption): bool
     {
         $post->setCaption($caption);
@@ -276,6 +269,43 @@ class PostService
         return true;
     }
 
+    /**
+     * Return all recent posts
+     */
+    public function fetchAllPosts($archived = false): array
+    {
+        $queryBuilder = $this->em->getRepository(Post::class)->createQueryBuilder('p')
+            ->orderBy('p.createdAt', 'DESC');
+
+        if (!$archived) {
+            $queryBuilder->where('p.isArchived = 0');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+
+    }
+
+    /**
+     * Fetch all the posts of the user
+     */
+    public function fetchUserPosts(User $user, bool $archived = false): array
+    {
+        $queryBuilder = $this->em->getRepository(Post::class)->createQueryBuilder('p')
+            ->where('p.user = :user')
+            ->orderBy('p.createdAt', 'DESC');
+
+        if (!$archived) {
+            $queryBuilder->andWhere('p.isArchived = 0');
+        }
+
+        $queryBuilder->setParameter('user', $user);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch all the archived posts of the user
+     */
     public function fetchArchivedPosts(User $user): array
     {
         return $this->em->getRepository(Post::class)->createQueryBuilder('p')
@@ -286,16 +316,9 @@ class PostService
             ->getResult();
     }
 
-    public function fetchUserPosts(User $user): array
-    {
-        return $this->em->getRepository(Post::class)->createQueryBuilder('p')
-            ->where('p.user = :user')
-            ->andWhere('p.isArchived = 0')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
-    }
-
+    /**
+     * Fetch all the posts liked by the user
+     */
     public function fetchUserLikedPosts(User $user): array
     {
         return $this->em->getRepository(Post::class)->createQueryBuilder('p')

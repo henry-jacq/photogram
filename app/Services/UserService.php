@@ -163,10 +163,5 @@ class UserService
         $users = $this->em->getRepository(User::class)->findAll();
         return $users;
     }
-
-    public function fetchUserPosts(User $user): array
-    {
-        $posts = $this->em->getRepository(Post::class)->findBy(['user' => $user], ['createdAt' => 'DESC']);
-        return $posts;
-    }
+    
 }
