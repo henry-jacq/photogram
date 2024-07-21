@@ -17,6 +17,7 @@ return function (App $app) {
         $group->get('home', [HomeController::class, 'home']);
         $group->get('discover', [HomeController::class, 'discover']);
         $group->get('subscribe', [HomeController::class, 'subscribe']);
+        $group->get('settings/{tab}', [HomeController::class, 'settings']);
         $group->get('profile/edit', [ProfileController::class, 'edit']);
         $group->get('profile/{name}', [ProfileController::class, 'profile']);
         $group->get('files/{category}/{image}', [HomeController::class, 'files']);

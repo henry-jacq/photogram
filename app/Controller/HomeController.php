@@ -55,6 +55,20 @@ class HomeController extends Controller
         return $this->render($response, 'user/subscribe', $args);
     }
 
+    public function settings(Request $request, Response $response): Response
+    {
+        $tab = $request->getAttribute('tab');
+        $userData = $request->getAttribute('userData');
+
+        $args = [
+            'title' => "Settings - " . ucfirst($tab),
+            'user' => $userData,
+            'tab' => $tab
+        ];
+        
+        return $this->render($response, "user/settings", $args);
+    }
+
     public function files(Request $request, Response $response): Response
     {
         $category = $request->getAttribute('category');
