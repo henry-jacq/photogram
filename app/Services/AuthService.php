@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core;
+namespace App\Services;
 
 use App\Entity\User;
 use App\Core\Session;
@@ -13,7 +13,7 @@ use App\Enum\StorageSpace;
 use App\Enum\SubscriptionPlan;
 use Doctrine\ORM\EntityManager;
 
-class Auth
+class AuthService
 { 
     public function __construct(
         private readonly EntityManager $manager,

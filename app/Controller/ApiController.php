@@ -3,10 +3,9 @@
 namespace App\Controller;
 
 use Closure;
-use App\Core\Auth;
 use App\Core\View;
-use App\Entity\User;
 use App\Core\Session;
+use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\UserService;
 use InvalidArgumentException;
@@ -41,7 +40,7 @@ class ApiController
     private const API_ROUTE = ROUTES_PATH . DIRECTORY_SEPARATOR . 'api';
 
     public function __construct(
-        private readonly Auth $auth,
+        private readonly AuthService $auth,
         private readonly EntityManager $manager,
         private readonly View $view,
         private readonly Session $session,

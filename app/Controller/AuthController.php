@@ -2,10 +2,9 @@
 
 namespace App\Controller;
 
-use App\Core\Auth;
 use App\Core\View;
-use App\Core\Config;
 use App\Core\Controller;
+use App\Services\AuthService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -13,7 +12,7 @@ class AuthController extends Controller
 {
     public function __construct(
         private readonly View $view,
-        private readonly Auth $auth
+        private readonly AuthService $auth
     )
     {
         parent::__construct($view);
