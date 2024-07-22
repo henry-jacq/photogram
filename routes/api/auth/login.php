@@ -2,13 +2,23 @@
 
 ${basename(__FILE__, '.php')} = function () {  
     if ($this->paramsExists(['user', 'password'])) {
-        if ($this->auth->login($this->data['user'], $this->data['password'])) {
+        $data = [
+            'user' => $this->data['user'],
+            'password' => $this->data['password'],
+            'ipAddress' => $this->getServerParam('REMOTE_ADDR'),
+            'userAgent' => $this->getServerParam('HTTP_USER_AGENT')
+        ];
+        
+        $login = $this->auth->login($data);
+
+        if ($login) {
             usleep(mt_rand(400000, 1300000));
             return $this->response([
                 'message' => 'Authenticated',
                 'redirect' => $this->getRedirect('/home')
             ], 202);
         }
+
         usleep(mt_rand(400000, 1300000));
         return $this->response([
             'message' => 'Unauthorized'

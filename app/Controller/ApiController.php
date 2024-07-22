@@ -17,13 +17,13 @@ class ApiController
 {
     protected $data;
     protected $files;
-    protected $params;
     protected $resource;
     protected $namespace;
     protected $attributes;
     private $current_call;
     protected $slimRequest;
     protected $slimResponse;
+    protected $serverParams;
     private const CONTENT_TYPE = 'application/json';
     private const ALLOWED_CONTENT_TYPES = [
         'application/json',
@@ -58,8 +58,8 @@ class ApiController
         $this->slimRequest = $request;
         $this->slimResponse = $response;
         $this->files = $request->getUploadedFiles();
-        $this->params = $request->getServerParams();
         $this->attributes = $request->getAttributes();
+        $this->serverParams = $request->getServerParams();
 
         $get = $this->cleanInputs($request->getQueryParams());
         $post = $this->cleanInputs($request->getParsedBody() ?? []);
@@ -279,6 +279,14 @@ class ApiController
             return $this->attributes[$attribute];
         }
         return false;
+    }
+
+    /**
+     * Get request server parameter
+     */
+    public function getServerParam(string $param)
+    {
+        return $this->serverParams[$param] ?? null;
     }
 
     /**
