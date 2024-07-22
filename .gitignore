@@ -4,6 +4,7 @@
 vendor/
 node_modules/
 resources/dist/
+resources/.sass-cache/
 public/js/vendor/
 storage/temp/
 storage/posts/
