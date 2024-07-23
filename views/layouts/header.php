@@ -15,27 +15,27 @@
                     <ul class="navbar-nav gap-md-3">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/home">
-                                <i class="bi bi-house-door<?php if ($title == 'Home'): echo('-fill'); endif; ?> fs-5" <?php if ($title != 'Home'): echo('data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Home"'); endif; ?>></i><span class="d-md-none ms-2">Home</span>
+                                <i class="bi bi-house-door<?php if ($title == 'Home'): echo('-fill'); endif; ?> fs-4" <?php if ($title != 'Home'): echo('data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Home"'); endif; ?>></i><span class="d-md-none ms-2">Home</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/discover">
-                                <i class="bi bi-compass<?php if ($title == 'Discover'): echo('-fill'); endif; ?> fs-5" <?php if ($title != 'Discover'): echo('data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Discover"'); endif; ?> ></i><span class="d-md-none ms-2">Discover</span>
+                                <i class="bi bi-compass<?php if ($title == 'Discover'): echo('-fill'); endif; ?> fs-4" <?php if ($title != 'Discover'): echo('data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Discover"'); endif; ?> ></i><span class="d-md-none ms-2">Discover</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a role="button" id="postUploadButton" class="nav-link active" aria-current="page">
-                                <i class="bi bi-plus-square fs-5" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Create Post"></i><span class="d-md-none ms-2">Create Post</span>
+                                <i class="bi bi-plus-square fs-4" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Create Post"></i><span class="d-md-none ms-2">Create Post</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a role="button" class="nav-link active" aria-current="page" onclick="dialog('Not Implemented!',' This feature is not implemented');"><i class="bi bi-heart fs-5" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="My Activities"></i><span class="d-md-none ms-2">My Activities</span></a>
+                            <a role="button" class="nav-link active" aria-current="page" onclick="dialog('Not Implemented!',' This feature is not implemented');"><i class="bi bi-heart fs-4" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="My Activities"></i><span class="d-md-none ms-2">My Activities</span></a>
                         </li>
                         <li class="nav-item">
                             <a role="button" class="nav-link active" aria-current="page" onclick="dialog('Not Implemented!',' This feature is not implemented');">
                                 <div class="d-flex">
                                     <div class="position-relative">
-                                        <i class="bi bi-bell fs-5"></i>
+                                        <i class="bi bi-bell fs-4"></i>
                                         <span class="position-absolute top-0 start-75 translate-middle badge rounded-pill bg-danger fw-light fst-normal">3</span>
                                     </div>
                                     <span class="d-md-none ms-2 mt-1">Notifications</span>
@@ -44,7 +44,7 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link active" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                                <img class="img-fluid border border-prime border-2 rounded-circle" src="<?= $user->getUserData()->getAvatarURL() ?>" width="28" height="28">
+                                <img class="img-fluid border border-prime border-2 rounded-circle" src="<?= $user->getUserData()->getAvatarURL() ?>" width="33" height="33">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708" />
                                 </svg>
