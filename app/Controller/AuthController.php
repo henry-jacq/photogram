@@ -60,10 +60,4 @@ class AuthController extends Controller
         ];
         return $this->render($response, 'auth/reset_password', $args, false, false);
     }
-
-    public function logout(Request $request, Response $response): Response
-    {
-        $this->auth->logout();
-        return $response->withHeader('Location', '/login')->withStatus(302);
-    }
 }

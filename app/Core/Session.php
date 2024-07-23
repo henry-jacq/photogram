@@ -26,13 +26,13 @@ class Session implements SessionInterface
             throw new RuntimeException('Headers have already sent by ' . $fileName . ':' . $line);
         }
 
-        // session_set_cookie_params(
-        //     [
-        //         'secure'   => $this->options['secure'],
-        //         'httponly' => $this->options['httponly'],
-        //         'samesite' => $this->options['samesite'],
-        //     ]
-        // );
+        session_set_cookie_params(
+            [
+                'secure'   => $this->options['secure'],
+                'httponly' => $this->options['httponly'],
+                'samesite' => $this->options['samesite'],
+            ]
+        );
 
         if (!empty($this->options['name'])) {
             session_name($this->options['name']);
@@ -61,6 +61,26 @@ class Session implements SessionInterface
     public function has(string $key): bool
     {
         return array_key_exists($key, $_SESSION);
+    }
+
+    public function getId()
+    {
+        return session_id();
+    }
+
+    public function createCookie(string $name, string $value, int $expiry = 0): void
+    {
+        setcookie($name, $value, $expiry, '/', '', $this->options['secure'], $this->options['httponly']);
+    }
+
+    public function getCookie(string $name): mixed
+    {
+        return $_COOKIE[$name] ?? null;
+    }
+
+    public function deleteCookie(string $name): void
+    {
+        setcookie($name, '', time() - 3600, '/');
     }
 
     public function regenerate(): bool

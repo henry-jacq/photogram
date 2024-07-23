@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Core\View;
 use App\Core\Controller;
+use App\Services\AuthService;
 use App\Services\PostService;
 use App\Services\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -13,8 +14,9 @@ class HomeController extends Controller
 {
     public function __construct(
         private readonly View $view,
+        private readonly AuthService $auth,
         private readonly PostService $post,
-        private readonly UserService $user
+        private readonly UserService $user,
     ) {
         parent::__construct($view);
     }
@@ -63,7 +65,7 @@ class HomeController extends Controller
         $args = [
             'title' => "Settings - " . ucfirst($tab),
             'user' => $userData,
-            'tab' => $tab
+            'tab' => $tab,
         ];
         
         return $this->render($response, "user/settings", $args);
@@ -100,5 +102,11 @@ class HomeController extends Controller
         ->withHeader('Expires', gmdate(DATE_RFC1123, time() + 60 * 60 * 24 * 365))
         ->withHeader('Last-Modified', gmdate(DATE_RFC1123, filemtime($path)))
         ->withHeader('Pragma', '');
+    }
+
+    public function logout(Request $request, Response $response): Response
+    {
+        $this->auth->logout();
+        return $response->withHeader('Location', '/login')->withStatus(302);
     }
 }

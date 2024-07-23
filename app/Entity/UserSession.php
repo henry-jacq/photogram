@@ -14,20 +14,26 @@ class UserSession
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'sessions')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private User $user;
+    
+    #[ORM\Column(type: 'string', name: 'session_id', nullable: false, unique: true)]
+    private string $sessionId;
+    
+    #[ORM\Column(type: 'string', name: 'session_token', nullable: false)]
+    private string $sessionToken;
 
-    #[ORM\Column(type: 'datetime', nullable: false)]
+    #[ORM\Column(type: 'string', name: 'ip_address', nullable: false)]
+    private string $ipAddress;
+    
+    #[ORM\Column(type: 'string', name: 'user_agent', nullable: false)]
+    private string $userAgent;
+    
+    #[ORM\Column(type: 'datetime', name: 'login_time', nullable: false)]
     private \DateTimeInterface $loginTime;
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private string $ipAddress;
+    #[ORM\Column(type: 'datetime', name: 'last_activity', nullable: false)]
+    private \DateTimeInterface $lastActivity;
 
-    #[ORM\Column(type: 'string', nullable: false)]
-    private string $userAgent;
 
-    #[ORM\Column(type: 'string', length: 64, nullable: false, unique: true)]
-    private string $hashKey;
-
-    
     public function getId(): int
     {
         return $this->id;
@@ -44,6 +50,28 @@ class UserSession
         return $this;
     }
 
+    public function getSessionId(): string
+    {
+        return $this->sessionId;
+    }
+
+    public function setSessionId(string $sessionId): self
+    {
+        $this->sessionId = $sessionId;
+        return $this;
+    }
+
+    public function getSessionToken(): string
+    {
+        return $this->sessionToken;
+    }
+
+    public function setSessionToken(string $sessionToken): self
+    {
+        $this->sessionToken = $sessionToken;
+        return $this;
+    }
+
     public function getLoginTime(): \DateTimeInterface
     {
         return $this->loginTime;
@@ -52,6 +80,17 @@ class UserSession
     public function setLoginTime(\DateTimeInterface $loginTime): self
     {
         $this->loginTime = $loginTime;
+        return $this;
+    }
+
+    public function getLastActivity(): \DateTimeInterface
+    {
+        return $this->lastActivity;
+    }
+
+    public function setLastActivity(\DateTimeInterface $lastActivity): self
+    {
+        $this->lastActivity = $lastActivity;
         return $this;
     }
 
@@ -77,13 +116,8 @@ class UserSession
         return $this;
     }
 
-    public function getHashKey(): string
+    public function getExpiredAt()
     {
-        return $this->hashKey;
-    }
-
-    public function setHashKey(string $hashKey): void
-    {
-        $this->hashKey = $hashKey;
+        
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use DateTime;
+use Exception;
 use App\Entity\User;
 use App\Core\Session;
 use App\Entity\Storage;
@@ -85,6 +86,13 @@ class AuthService
      */
     public function login(array $data): bool
     {
+        // Check if the session is already active
+        $currentSessionID = $this->session->getId();
+        if ($this->getUserSessionById($currentSessionID) !== null) {
+            // Cannot login if the session is already active
+            return false;
+        }
+
         // Check if the user exists with the given username or email
         $user = $this->em->getRepository(User::class)->createQueryBuilder('u')
             ->where('u.username = :user OR u.email = :user')
@@ -93,12 +101,15 @@ class AuthService
             ->getOneOrNullResult();
 
         if ($user && password_verify($data['password'], $user->getPassword())) {
-            $sessionKey = $this->createSession(
+            
+            $this->session->regenerate();
+
+            $session = $this->createSession(
                 $user, $data['ipAddress'], $data['userAgent']
             );
-            $this->session->regenerate();
+
             $this->session->put('user', $user->getId());
-            $this->session->put('sessionKey', $sessionKey);
+            $this->session->put('userSession', $session);
             return true;
         }
 
@@ -110,14 +121,14 @@ class AuthService
      */
     public function logout(): void
     {
-        $sessionKey = $this->session->get('sessionKey');
-        if ($sessionKey) {
-            $this->terminateSession($sessionKey);
-            $this->session->forget('sessionKey');
+        $session = $this->session->get('userSession');
+        if ($session instanceof UserSession) {
+            $this->terminateSession($session);
+            $this->session->forget('userSession');
         }
         $this->session->forget('user');
         $this->session->forget('userData');
-        $this->session->forget('sessionKey');
+        $this->session->deleteCookie('session_token');
         $this->session->regenerate();
     }
 
@@ -135,22 +146,51 @@ class AuthService
     /**
      * Create a new session for the user
      */
-    public function createSession(User $user, string $ipAddress, string $userAgent): string
+    public function createSession(User $user, string $ipAddress, string $userAgent): UserSession
     {
         $session = new UserSession();
+        $id = $this->session->getId();
         $session->setUser($user);
-        $session->setLoginTime(new DateTime());
+        $session->setSessionId($id);
         $session->setIpAddress($ipAddress);
         $session->setUserAgent($userAgent);
 
-        // Generate a session hash key
-        $hashKey = $this->generateSessionHashKey($session->getLoginTime(), $userAgent, $ipAddress);
-        $session->setHashKey($hashKey);
+        $time = new DateTime();
+        $session->setLoginTime($time);
+        $session->setLastActivity($time);
+
+        $token = bin2hex(random_bytes(32));
+        $session->setSessionToken($token);
+        $this->session->createCookie('session_token', $token, 0);
+
 
         $this->em->persist($session);
         $this->em->flush();
 
-        return $hashKey;
+        return $session;
+    }
+
+    /**
+     * Regenerate the session token
+     */
+    public function regenerateSessionToken(UserSession $session): string
+    {
+        $newToken = bin2hex(random_bytes(32));
+        $this->session->createCookie('session_token', $newToken, 0);
+        $session->setSessionToken($newToken);
+        $this->em->persist($session);
+        $this->em->flush();
+        return $newToken;
+    }
+
+    /**
+     * Update the last activity of the session
+     */
+    public function updateLastActivity(UserSession $session): void
+    {
+        $session->setLastActivity(new DateTime());
+        $this->em->persist($session);
+        $this->em->flush();
     }
 
     /**
@@ -161,22 +201,51 @@ class AuthService
         return $this->em->getRepository(UserSession::class)->findBy(['user' => $user]);
     }
 
-    public function getUserSession(string $hashKey): UserSession
+    /**
+     * Get the user session by metadata
+     */
+    public function getUserSession(array $metaData): ?UserSession
     {
-        return $this->em->getRepository(UserSession::class)->findOneBy(['hashKey' => $hashKey]);
+        return $this->em->getRepository(UserSession::class)->findOneBy([
+            'sessionId' => $metaData['sessionId'],
+            'sessionToken' => $metaData['sessionToken'],
+            'userAgent' => $metaData['userAgent'],
+            'ipAddress' => $metaData['ipAddress'],
+        ]);
     }
 
     /**
-     * Terminate the session by hash key
+     * Get the user session by ID
      */
-    public function terminateSession(string $hashKey): bool
+    public function getUserSessionById(string $id): ?UserSession
     {
-        $session = $this->getUserSession($hashKey);
-        if ($session) {
-            $this->em->remove($session);
-            $this->em->flush();
-            return true;
+        return $this->em->getRepository(UserSession::class)->findOneBy([
+            'sessionId' => $id,
+        ]);
+    }
+
+    /**
+     * Terminate the session
+     */
+    public function terminateSession(UserSession $userSession): bool
+    {
+        // Check if the entity is managed
+        if (!$this->em->contains($userSession)) {
+            // Fetch the entity from the database
+            $userSession = $this->getUserSessionById($userSession->getSessionId());
+
+            // If the entity is still not found, handle the error accordingly
+            if (!$userSession) {
+                // throw new Exception('User session not found');
+                error_log('User session not found', true);
+                return false;
+            }
         }
+
+        // Remove the entity
+        $this->em->remove($userSession);
+        $this->em->flush();
+        return true;
     }
 
     /**
@@ -198,7 +267,7 @@ class AuthService
      */
     public function terminateUserSessions(int $userId): bool
     {
-        $sessions = $this->em->getRepository(UserSession::class)->findBy(['user' => $userId]);
+        $sessions = $this->em->getRepository(UserSession::class)->findBy(['user_id' => $userId]);
 
         if ($sessions) {
             foreach ($sessions as $session) {
@@ -206,29 +275,6 @@ class AuthService
             }
             $this->em->flush();
             return true;
-        }
-        return false;
-    }
-
-    /**
-     * Terminate all the sessions for the user
-     */
-    private function generateSessionHashKey(\DateTime $loginTime, string $userAgent, string $ipAddress): string
-    {
-        return md5($loginTime->getTimestamp() . $userAgent . $ipAddress);
-    }
-
-    /**
-     * Validate the session hash key
-     */
-    public function validateSessionHashKey(User $user, string $userAgent, string $ipAddress): bool
-    {
-        $activeSessions = $this->getActiveSessions($user);
-        foreach ($activeSessions as $session) {
-            $hashKey = $this->generateSessionHashKey($session->getLoginTime(), $userAgent, $ipAddress);
-            if ($session->getHashKey() === $hashKey) {
-                return true;
-            }
         }
         return false;
     }

@@ -21,6 +21,7 @@ return function (App $app) {
         $group->get('profile/edit', [ProfileController::class, 'edit']);
         $group->get('profile/{name}', [ProfileController::class, 'profile']);
         $group->get('files/{category}/{image}', [HomeController::class, 'files']);
+        $group->get('logout', [HomeController::class, 'logout']);
     })->add(AuthoriseMiddleware::class);
 
     // Auth Routes
@@ -32,8 +33,6 @@ return function (App $app) {
         $group->get('register', [AuthController::class, 'registerView']);
         $group->get('forgot-password', [AuthController::class, 'forgotPassword']);
     })->add(AuthMiddleware::class);
-
-    $app->get('/logout', [AuthController::class, 'logout']);
 
     // API Routes
     $app->group('/api', function (RouteCollectorProxy $group) {
