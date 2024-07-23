@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use Exception;
-use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\UserData;
+use App\Entity\UserEmail;
 use Doctrine\ORM\EntityManager;
 
 
@@ -163,5 +163,48 @@ class UserService
         $users = $this->em->getRepository(User::class)->findAll();
         return $users;
     }
-    
+
+    /**
+     * Add a new email to the user
+     */
+    public function addEmail(User $user, string $email): bool
+    {
+        $userEmail = new UserEmail();
+        $userEmail->setUser($user);
+        $userEmail->setEmail($email);
+
+        $this->em->persist($userEmail);
+        $this->em->flush();
+
+        return true;
+    }
+
+    /**
+     * Remove the email from the user
+     */
+    public function removeEmail(User $user, string $email): bool
+    {
+        $userEmail = $this->em->getRepository(UserEmail::class)->findOneBy(['user' => $user, 'email' => $email]);
+        if ($userEmail) {
+            $this->em->remove($userEmail);
+            $this->em->flush();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Set the primary email for the user
+     */
+    public function setPrimaryEmail(User $user, string $email): bool
+    {
+        $userEmails = $this->em->getRepository(UserEmail::class)->findBy(['user' => $user]);
+        foreach ($userEmails as $userEmail) {
+            $userEmail->setPrimary($userEmail->getEmail() === $email);
+            $this->em->persist($userEmail);
+        }
+        $this->em->flush();
+        return true;
+    }
+
 }

@@ -24,6 +24,12 @@ class User
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $is2FAEnabled = false;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $twoFactorSecret = null;
+
     #[ORM\Column(type: 'string', name: 'reset_token', nullable: true)]
     private ?string $resetToken;
 
@@ -95,6 +101,28 @@ class User
     public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function is2FAEnabled(): bool
+    {
+        return $this->is2FAEnabled;
+    }
+
+    public function setIs2FAEnabled(bool $is2FAEnabled): self
+    {
+        $this->is2FAEnabled = $is2FAEnabled;
+        return $this;
+    }
+
+    public function getTwoFactorSecret(): ?string
+    {
+        return $this->twoFactorSecret;
+    }
+
+    public function setTwoFactorSecret(?string $twoFactorSecret): self
+    {
+        $this->twoFactorSecret = $twoFactorSecret;
         return $this;
     }
 
