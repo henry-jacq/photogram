@@ -233,13 +233,6 @@ class AuthService
         if (!$this->em->contains($userSession)) {
             // Fetch the entity from the database
             $userSession = $this->getUserSessionById($userSession->getSessionId());
-
-            // If the entity is still not found, handle the error accordingly
-            if (!$userSession) {
-                // throw new Exception('User session not found');
-                error_log('User session not found', true);
-                return false;
-            }
         }
 
         // Remove the entity
