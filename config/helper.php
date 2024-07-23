@@ -89,6 +89,78 @@ function getHumanDiffTime(string $timestamp)
     return $time->diffForHumans();
 }
 
+function getBrowser($userAgent)
+{
+    $browser = "Unknown Browser";
+
+    $browsers = [
+        'MSIE' => 'Internet Explorer',
+        'Trident' => 'Internet Explorer', // For IE 11+
+        'Edge' => 'Microsoft Edge',
+        'Firefox' => 'Mozilla Firefox',
+        'Chrome' => 'Google Chrome',
+        'Safari' => 'Apple Safari',
+        'Opera' => 'Opera',
+        'OPR' => 'Opera', // Opera's user agent string might contain 'OPR' instead of 'Opera'
+    ];
+
+    foreach ($browsers as $key => $value) {
+        if (strpos($userAgent, $key) !== false) {
+            $browser = $value;
+            break;
+        }
+    }
+
+    return $browser;
+}
+
+function getOS($userAgent)
+{
+    $osPlatform = "Unknown OS Platform";
+
+    $osArray = [
+        '/windows nt 10/i' => 'Windows 10',
+        '/windows nt 6.3/i' => 'Windows 8.1',
+        '/windows nt 6.2/i' => 'Windows 8',
+        '/windows nt 6.1/i' => 'Windows 7',
+        '/windows nt 6.0/i' => 'Windows Vista',
+        '/windows nt 5.2/i' => 'Windows Server 2003/XP x64',
+        '/windows nt 5.1/i' => 'Windows XP',
+        '/windows xp/i' => 'Windows XP',
+        '/windows nt 5.0/i' => 'Windows 2000',
+        '/windows me/i' => 'Windows ME',
+        '/win98/i' => 'Windows 98',
+        '/win95/i' => 'Windows 95',
+        '/win16/i' => 'Windows 3.11',
+        '/macintosh|mac os x/i' => 'Mac OS X',
+        '/mac_powerpc/i' => 'Mac OS 9',
+        '/linux/i' => 'Linux',
+        '/ubuntu/i' => 'Ubuntu',
+        '/iphone/i' => 'iPhone',
+        '/ipod/i' => 'iPod',
+        '/ipad/i' => 'iPad',
+        '/android/i' => 'Android',
+        '/blackberry/i' => 'BlackBerry',
+        '/webos/i' => 'Mobile',
+    ];
+
+    foreach ($osArray as $regex => $value) {
+        if (preg_match($regex, $userAgent)) {
+            $osPlatform = $value;
+            break;
+        }
+    }
+
+    return $osPlatform;
+}
+
+function getDeviceType($userAgent)
+{
+    $isMobile = preg_match('/mobile|android|kindle|silk|midp|phone|ipod|tablet/i', $userAgent);
+
+    return $isMobile ? 'Phone' : 'PC';
+}
+
 // Convert the size to a more readable format (e.g., KB, MB)
 function formatSizeUnits($bytes) {
     if ($bytes >= 1073741824) {

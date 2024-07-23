@@ -211,60 +211,38 @@
                         <p class="font-size-sm text-secondary">This is a list of devices that have logged into
                             your account. Revoke any sessions that you do not recognize.</p>
                         <ul class="list-group list-group-sm">
-                            <li class="list-group-item">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <div class="mb-5 me-3 p-1" data-toggle="tooltip" title="Desktop"><i class="bi bi-display"></i></div>
-                                        <div class="float-left my-3">
-                                            <div>
-                                                <h6 class="mb-1">223.228.184.131</h6>
-                                            </div>
-                                            <div>
-                                                Last accessed on 22 Feb 17:11
-                                            </div>
-                                            <div>
-                                                <strong>Brave</strong>
-                                                on
-                                                <strong>Windows</strong>
-                                            </div>
-                                            <div>
-                                                <strong>Signed in</strong>
-                                                on 22 Feb 17:11
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="float-right">
-                                        <a class="btn btn-danger btn-sm ms-3"><span class="sr-only">Revoke</span>Revoke</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <div class="mb-5 me-3 p-1" data-toggle="tooltip" title="Phone"><i class="bi bi-phone"></i></div>
-                                        <div class="float-left my-3">
-                                            <div>
-                                                <h6 class="mb-1">137.212.56.223</h6>
-                                            </div>
-                                            <div>
-                                                Last accessed on 23 Feb 13:32
-                                            </div>
-                                            <div>
-                                                <strong>Chrome</strong>
-                                                on
-                                                <strong>Android</strong>
-                                            </div>
-                                            <div>
-                                                <strong>Signed in</strong>
-                                                on 23 Feb 13:32
+                            <?php foreach ($sessions as $session) : ?>
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <div class="mb-5 me-3 p-1" data-toggle="tooltip" title="Desktop"><i class="bi <?php if (getDeviceType($session->getUserAgent()) == 'Phone'): echo('bi-phone'); else: echo('bi-display'); endif;?>"></i></div>
+                                            <div class="float-left my-3">
+                                                <div>
+                                                    <h6 class="mb-1">
+                                                        <?php echo($session->getIpAddress());
+                                                        if ($session->getSessionToken() == $sessionToken): echo('<span class="badge text-bg-success ms-2">Active</span>'); endif; ?>
+                                                    </h6>
+                                                </div>
+                                                <div>
+                                                    Last accessed on <?= $session->getLastActivity()->format('d M H:i')?>
+                                                </div>
+                                                <div>
+                                                    <strong><?= getBrowser($session->getUserAgent())?></strong>
+                                                    on
+                                                    <strong><?= getOS($session->getUserAgent())?></strong>
+                                                </div>
+                                                <div>
+                                                    <strong>Signed in</strong>
+                                                    on <?= $session->getLoginTime()->format('d M H:i')?>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="float-right" data-session-id="<?= $session->getId() ?>">
+                                            <a role="button" class="btn btn-danger btn-sm btn-remove-session ms-3">Revoke</a>
+                                        </div>
                                     </div>
-                                    <div class="float-right">
-                                        <a class="btn btn-danger btn-sm ms-3"><span class="sr-only">Revoke</span>Revoke</a>
-                                    </div>
-                                </div>
-                            </li>
+                                </li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
                 </form>

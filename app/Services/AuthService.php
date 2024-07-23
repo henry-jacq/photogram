@@ -184,6 +184,14 @@ class AuthService
     }
 
     /**
+     * Get the session token
+     */
+    public function getSessionToken()
+    {
+        return $this->session->getCookie('session_token');
+    }
+
+    /**
      * Update the last activity of the session
      */
     public function updateLastActivity(UserSession $session): void
@@ -196,7 +204,7 @@ class AuthService
     /**
      * Get the active sessions for the user
      */
-    public function getActiveSessions(User $user): array
+    public function fetchSessions(User $user): array
     {
         return $this->em->getRepository(UserSession::class)->findBy(['user' => $user]);
     }
@@ -234,7 +242,11 @@ class AuthService
             // Fetch the entity from the database
             $userSession = $this->getUserSessionById($userSession->getSessionId());
         }
-
+        
+        if (is_null($userSession)) {
+            return false;
+        }
+        
         // Remove the entity
         $this->em->remove($userSession);
         $this->em->flush();

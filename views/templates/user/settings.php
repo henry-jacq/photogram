@@ -67,7 +67,11 @@
         </div>
 
         <div class="col-lg-9">
-            <?php $this->renderComponent("settings/{$tab}"); ?>
+            <?php $this->renderComponent("settings/{$tab}", [
+                'user' => $user,
+                'sessions' => $sessions,
+                'sessionToken' => $sessionToken
+            ]); ?>
         </div>
     </div>
 </div>

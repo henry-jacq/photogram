@@ -61,11 +61,15 @@ class HomeController extends Controller
     {
         $tab = $request->getAttribute('tab');
         $userData = $request->getAttribute('userData');
+        $sessionToken = $this->auth->getSessionToken();
+        $sessions = $this->auth->fetchSessions($userData);
 
         $args = [
             'title' => "Settings - " . ucfirst($tab),
             'user' => $userData,
             'tab' => $tab,
+            'sessions' => $sessions,
+            'sessionToken' => $sessionToken
         ];
         
         return $this->render($response, "user/settings", $args);
