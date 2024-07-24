@@ -25,6 +25,13 @@ class AuthMiddleware implements MiddlewareInterface
     
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // Redirect to home page if user is already logged in
+        if ($this->session->get('user') !== null) {
+            return $this->responseFactory
+                ->createResponse(302)
+                ->withHeader('Location', '/home');
+        }
+
         // Protection against session fixation attacks
         $name = $this->config->get('session.name');
         $sessionId = $request->getCookieParams()[$name] ?? null;
@@ -39,12 +46,6 @@ class AuthMiddleware implements MiddlewareInterface
                 $this->session->forget('userSession');
                 return $handler->handle($request);
             }
-        }
-        
-        if ($this->session->get('user') !== null) {
-            return $this->responseFactory
-            ->createResponse(302)
-            ->withHeader('Location', '/home');
         }
         
         return $handler->handle($request);
