@@ -207,4 +207,14 @@ class UserService
         return true;
     }
 
+    /**
+     * Update the user theme
+     */
+    public function updateTheme(User $user, string $theme)
+    {
+        $user = $user->getPreferences()->setTheme($theme);
+        $this->em->persist($user);
+        $this->em->flush();
+        return true;
+    }
 }

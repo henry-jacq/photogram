@@ -1,15 +1,17 @@
 <?php
 
+use App\Enum\PreferredTheme;
+
 ${basename(__FILE__, '.php')} = function () {
     if ($this->isAuthenticated() && $this->isMethod('GET')) {
 
         // To change user theme
         if ($this->paramsExists(['theme'])) {
 
-            $id = $this->getUserId();
-            $theme = $this->data['theme'] ?? "dark";
+            $user = $this->getUser();
+            $theme = $this->data['theme'] ?? PreferredTheme::Dark->value;
 
-            $result = $this->user->updatePreference($id, "theme", $theme);
+            $result = $this->user->updateTheme($user, $theme);
 
             return $this->response([
                 'message' => $result

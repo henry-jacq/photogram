@@ -71,7 +71,7 @@
                                     <div class="d-flex justify-content-center gap-2 align-items-center px-2 py-0">
                                         <span class="user-select-none">Mode:</span>
                                         <?php 
-                                        $theme = $user->preferences[0]->theme ?? 'dark';
+                                        $theme = $user->getPreferences()->getTheme();
                                         ?>
                                         <button type="button" class="btn border <?php if($theme=='light'): echo('btn-prime'); endif;?>" data-bs-theme-value="light">
                                             <i class="bi bi-sun fs-5"></i>
