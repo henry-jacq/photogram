@@ -1,6 +1,14 @@
-<!DOCTYPE html>
+<?php
+use App\Enum\PreferredTheme;
 
-<html lang="en" data-bs-theme="dark">
+if (isset($params['user'])) {
+    $theme = $params['user']->getPreferences()->getTheme();
+} else {
+    $theme = PreferredTheme::Dark->value;
+} ?>
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="<?php echo($theme); ?>">
 
 <?php echo ($this->renderLayout('head', $params)); ?>
 

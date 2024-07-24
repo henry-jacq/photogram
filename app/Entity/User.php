@@ -39,6 +39,9 @@ class User
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private UserData $userData;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private Preferences $preferences;
+
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
     private Collection $posts;
 
@@ -156,6 +159,17 @@ class User
     public function setUserData(UserData $userData): self
     {
         $this->userData = $userData;
+        return $this;
+    }
+
+    public function getPreferences(): Preferences
+    {
+        return $this->preferences;
+    }
+
+    public function setPreferences(Preferences $preferences): self
+    {
+        $this->preferences = $preferences;
         return $this;
     }
 
