@@ -33,10 +33,6 @@ class PostService
     public function createPost(array $data): bool
     {
         $post = new Post();
-        $post->setUser($data['user']);
-        // $post->setCaption($data['caption']);
-        $post->setCreatedAt(new \DateTime());
-        $post->setIsArchived(false);
 
         $fullPaths = [];
         foreach ($data['images'] as $imagePath) {
@@ -46,10 +42,17 @@ class PostService
             $post->addImage($image);
             $fullPaths[] = $this->storagePath . $name;
         }
-        
-        // Generate caption for the post
-        $text = $this->generateCaption($fullPaths);
-        $post->setCaption($text);
+
+        if ($data['ai_caption'] === 'true') {
+            $caption = $this->generateCaption($fullPaths);
+            $post->setCaption($caption);
+        } else {
+            $post->setCaption($data['user_caption']);
+        }
+
+        $post->setUser($data['user']);
+        $post->setCreatedAt(new \DateTime());
+        $post->setIsArchived(false);
 
         $this->em->persist($post);
         $this->em->flush();

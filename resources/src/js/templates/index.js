@@ -99,7 +99,32 @@ $("[name=view_mode]").on('click', function() {
 // Create Post Modal
 $('#postUploadButton').on('click', function () {
     var title = `<i class="bi bi-plus-circle-dotted me-2"></i>Create Post`;
-    var body = `<div class="container"><p class="lead mb-2">Add caption</p><textarea class="form-control shadow-none post-caption mb-1" name="post_text" rows="3" placeholder="Say something..."></textarea><p id="total-caption-chars" class="text-end mb-2">0/240</p><p class="lead mb-2">Add photos</p><form class="dropzone rounded mb-3" id="dzCreatePost"><div class="dz-message py-1"><i class="bi bi-images display-6"></i><p class="small">Drop photos here or click to upload</p></div></form></div>`;
+    var body = `
+        <div class="container">
+            <h5 class="fw-semibold mb-3">Add Caption</h5>
+          
+            <!-- Checkbox for AI-based captions -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="aiCaptionCheckbox">
+                <label class="form-check-label" for="aiCaptionCheckbox">
+                    Generate AI-based caption
+                </label>
+            </div>
+            <div id="aiCaptionWarning" class="alert alert-warning d-none mb-3" role="alert">
+                <span class="fw-bold">Caution:</span> This beta feature may not provide accurate captions and picks one randomly for multiple images.
+            </div>
+            <div id="userCaption">
+                <textarea class="form-control shadow-none post-caption mb-2" name="post_text" rows="2" placeholder="Enter your caption..."></textarea>
+                <p id="total-caption-chars" class="text-end mb-1">0/240</p>
+            </div>
+            <h5 class="fw-semibold mb-3">Add Photos</h5>
+            <form class="dropzone rounded mb-3 dz-clickable" id="dzCreatePost">
+                <div class="dz-message py-1">
+                    <i class="bi bi-images display-6"></i>
+                    <p class="small">Drag and drop photos here or click to upload</p>
+                </div>
+            </form>
+        </div>`;
 
     var d = new Dialog(title, body);
     d.setButtons([
@@ -155,7 +180,14 @@ $('#postUploadButton').on('click', function () {
 
         // Add post text to dropzone formdata
         myDropzone.on("sending", function (file, xhr, formData) {
-            formData.append("post_text", $('.post-caption').val());
+            var ai_caption = $('#aiCaptionCheckbox').is(':checked');
+            if (ai_caption) {
+                formData.append("ai_caption", true);
+                formData.append("user_caption", false);
+            } else {
+                formData.append("ai_caption", false);
+                formData.append("user_caption", $('.post-caption').val());
+            }
         });
 
         // Remove rejected files from dropzone
@@ -172,6 +204,18 @@ $('#postUploadButton').on('click', function () {
         $(modal).on('hide.bs.modal', function () {
             if (myDropzone.files.length > 0) {
                 myDropzone.removeAllFiles();
+            }
+        });
+
+        $('#aiCaptionCheckbox').on('change', function () {
+            var textarea = $('#userCaption');
+            var warning = $('#aiCaptionWarning');
+            if (this.checked) {
+                textarea.addClass('d-none');
+                warning.removeClass('d-none');
+            } else {
+                textarea.removeClass('d-none');
+                warning.addClass('d-none');
             }
         });
 
@@ -213,7 +257,10 @@ $('#postUploadButton').on('click', function () {
                     $('<p id="error-message" class="text-danger mb-1">Cannot create post!</p>').insertBefore('#dzCreatePost');
                 }
             } else {
-                location.replace('/home');
+                $(modal).modal('hide');
+                setTimeout(function() {
+                    location.replace('/home');
+                }, Math.random() * 1000);
             }
         });
 

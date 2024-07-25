@@ -16,11 +16,14 @@ ${basename(__FILE__, '.php')} = function () {
         $data = [
             'images' => $paths,
             'user' => $this->getUser(),
-            'caption' => $this->data['post_text'],
+            'ai_caption' => $this->data['ai_caption'],
+            'user_caption' => $this->data['user_caption'],
         ];
 
         if ($this->post->createPost($data)) {
-            usleep(mt_rand(400000, 1300000));
+            if ($this->data['ai_caption'] !== 'true') {
+                usleep(mt_rand(1500000, 2800000));
+            }
             return $this->response([
                 'message' => true
             ], 200);
