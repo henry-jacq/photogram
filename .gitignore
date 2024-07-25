@@ -1,7 +1,8 @@
 .env
-env/
 .idea
+*.pyc
 .phpunit.result.cache
+venv/
 vendor/
 node_modules/
 resources/dist/
