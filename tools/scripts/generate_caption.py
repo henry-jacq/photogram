@@ -23,18 +23,27 @@ def preprocess_image(image_path):
     encoding = image_processor(images=image, return_tensors="pt")
     return encoding
 
-def generate_caption(image_path):
-    encoding = preprocess_image(image_path)
-    pixel_values = encoding.pixel_values.to(device)
+def generate_caption(image_paths):
+    captions = []
+    for image_path in image_paths:
+        encoding = preprocess_image(image_path)
+        pixel_values = encoding.pixel_values.to(device)
 
-    # Generate the caption
-    output_ids = model.generate(pixel_values, max_length=16, num_beams=4, early_stopping=True)
+        # Generate the caption
+        output_ids = model.generate(pixel_values, max_length=16, num_beams=4, early_stopping=True)
+        
+        # Decode the output ids to generate the caption
+        caption = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+        captions.append(caption)
+    return captions
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python generate_caption.py <image_path1> <image_path2> ... <image_pathN>")
+        sys.exit(1)
     
-    # Decode the output ids to generate the caption
-    caption = tokenizer.decode(output_ids[0], skip_special_tokens=True)
-    return caption
-
-# Example usage
-image_path = sys.argv[1]
-caption = generate_caption(image_path)
-print(caption)
+    image_paths = sys.argv[1:]
+    captions = generate_caption(image_paths)
+    
+    for caption in captions:
+        print(f"{caption}")

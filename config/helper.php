@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+require_once __DIR__ . '/../config/constants.php';
 
 // Helper functions
 
@@ -178,4 +179,53 @@ function formatSizeUnits($bytes) {
     }
 
     return $bytes;
+}
+
+/**
+ * Executes a Python script with the given script key and arguments.
+ *
+ * @param string $scriptKey The key corresponding to the Python script to execute.
+ * @param array $args Arguments to pass to the Python script.
+ * @return string The output of the Python script execution.
+ * @throws Exception If Python 3 is not found or script execution fails.
+ */
+function pyToolExecuter($scriptKey, $args = [])
+{
+    $pythonScriptPath = TOOLS_PATH . DIRECTORY_SEPARATOR .'manager.py';
+
+    // Determine the Python executable
+    $pythonExecutable = ROOT_PATH . "/venv/bin/python3";
+
+    // Set the environment variable for Hugging Face cache
+    if (!file_exists(STORAGE_PATH."/cache")) {
+        mkdir(STORAGE_PATH."/cache", 0777, true);
+    }
+    putenv("TRANSFORMERS_CACHE=". STORAGE_PATH."/cache");
+
+    if (empty($pythonExecutable)) {
+        throw new Exception('Python 3 executable not found.');
+    }
+
+    // Validate the script key
+    if (str_contains($scriptKey, '.')) {
+        throw new Exception('Invalid script key. No dots allowed in script key.');
+    }
+
+    // Construct the command
+    $command = escapeshellcmd("$pythonExecutable $pythonScriptPath $scriptKey " . implode(' ', array_map('escapeshellarg', $args)));
+
+    // Execute the command and capture the output
+    $output = trim(shell_exec($command));
+
+    // Check for execution errors
+    if ($output === null) {
+        throw new Exception("Failed to execute command: $command");
+    }
+
+    // Optionally handle specific errors (depends on your Python script)
+    if (str_contains($output, 'error:')) {
+        throw new Exception("Python script returned an error: $output");
+    }
+
+    return $output;
 }

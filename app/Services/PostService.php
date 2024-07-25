@@ -34,16 +34,22 @@ class PostService
     {
         $post = new Post();
         $post->setUser($data['user']);
-        $post->setCaption($data['caption']);
+        // $post->setCaption($data['caption']);
         $post->setCreatedAt(new \DateTime());
         $post->setIsArchived(false);
 
+        $fullPaths = [];
         foreach ($data['images'] as $imagePath) {
             $image = new Image();
             $name = $this->saveImage($imagePath);
             $image->setImagePath($name);
             $post->addImage($image);
+            $fullPaths[] = $this->storagePath . $name;
         }
+        
+        // Generate caption for the post
+        $text = $this->generateCaption($fullPaths);
+        $post->setCaption($text);
 
         $this->em->persist($post);
         $this->em->flush();
@@ -64,6 +70,27 @@ class PostService
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Generate AI based caption for the images
+     */
+    public function generateCaption(array $imagePaths): string
+    {
+        $captions = pyToolExecuter('generate_caption', $imagePaths);
+        if (empty($captions)) {
+            throw new Exception("Caption generation failed.");
+        }
+
+        $output = explode("\n", $captions);
+
+        if (count($output) > 1) {
+            $output = $output[array_rand($output)];
+        } else {
+            $output = $output[0];
+        }
+
+        return ucfirst(trim($output));
     }
 
     /**

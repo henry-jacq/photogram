@@ -1,20 +1,16 @@
 import os, sys, subprocess
-from utilities.helper import validate_file_path, check_internet_connectivity
 
-# Define constants or configuration here
-python_executable = 'python3'
+# Root directory
+root_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 scripts_dir = os.path.join(os.path.dirname(__file__), 'scripts')
-config_file = os.path.join(os.path.dirname(__file__), 'config.json')
+python_executable = os.path.join(root_dir, 'venv', 'bin', 'python3')
+
+os.environ['TRANSFORMERS_CACHE'] = os.path.join(root_dir, 'storage', 'cache')
 
 def run_script(script_key, *args):
     try:
         script_name = script_key + '.py'
         script_path = os.path.join(scripts_dir, script_name)
-        
-        # Check internet connection
-        if not check_internet_connectivity():
-            print("Error: No internet connection. Please check your connection and try again.")
-            sys.exit(1)
         
         # Validate script path
         validate_file_path(script_path)
@@ -30,6 +26,12 @@ def run_script(script_key, *args):
     except Exception as e:
         print(f"Exception: {str(e)}")
         sys.exit(1)
+        
+def validate_file_path(file_path):
+    """Validate if the provided file path exists."""
+    if not os.path.isfile(file_path):
+        raise ValueError(f"File not found: {file_path}")
+    return file_path
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
