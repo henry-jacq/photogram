@@ -200,7 +200,7 @@ function pyToolExecuter($scriptKey, $args = [])
     if (!file_exists(STORAGE_PATH."/cache")) {
         mkdir(STORAGE_PATH."/cache", 0777, true);
     }
-    putenv("TRANSFORMERS_CACHE=". STORAGE_PATH."/cache");
+    putenv("HF_HOME=". STORAGE_PATH."/cache");
 
     if (empty($pythonExecutable)) {
         throw new Exception('Python 3 executable not found.');

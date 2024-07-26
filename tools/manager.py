@@ -1,11 +1,23 @@
-import os, sys, subprocess
+import os
+import sys
+import subprocess
+import logging
+import warnings
+from setup import root_dir, hf_home_dir
 
-# Root directory
-root_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+# Suppress specific FutureWarning related to TRANSFORMERS_CACHE
+warnings.filterwarnings("ignore", category=FutureWarning, module="transformers.utils.hub")
+
+# Define paths and environment
 scripts_dir = os.path.join(os.path.dirname(__file__), 'scripts')
 python_executable = os.path.join(root_dir, 'venv', 'bin', 'python3')
 
-os.environ['TRANSFORMERS_CACHE'] = os.path.join(root_dir, 'storage', 'cache')
+# Set environment variable for caching
+os.environ['HF_HOME'] = hf_home_dir
+
+# Set logging configuration
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger("manager")
 
 def run_script(script_key, *args):
     try:
@@ -16,15 +28,17 @@ def run_script(script_key, *args):
         validate_file_path(script_path)
         
         command = [python_executable, script_path] + list(args)
+        logger.info(f"Running command: {' '.join(command)}")
+        
         result = subprocess.run(command, capture_output=True, text=True)
         
         if result.returncode != 0:
-            print(f"Error running script {script_name}: {result.stderr.strip()}")
+            logger.error(f"Error running script {script_name}: {result.stderr.strip()}")
             sys.exit(result.returncode)
         
         print(result.stdout.strip())
     except Exception as e:
-        print(f"Exception: {str(e)}")
+        logger.exception(f"Exception: {str(e)}")
         sys.exit(1)
         
 def validate_file_path(file_path):
