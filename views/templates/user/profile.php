@@ -26,8 +26,8 @@
                     <?php
                     if ($user->isFollowing($profileUser)) : ?>
                         <i class="bi-person-check me-1"></i>Following
-                        <?php else : ?>
-                            <i class="bi-person-add me-1"></i>Follow
+                    <?php else : ?>
+                        <i class="bi-person-add me-1"></i>Follow
                     <?php endif; ?>
                 </button>
                 <button class="btn btn-sm btn-secondary" onclick="dialog('Not Implemented!',' This feature is not implemented');"><i class="bi bi-chat-left-text-fill me-1"></i>Message</button>
@@ -51,7 +51,7 @@
                 <?php endif; ?>
             </div>
             <div class="col-md-5 mb-2 px-1">
-                <div class="hstack gap-3 gap-xl-3 float-md-end">
+                <div class="hstack gap-3 gap-xl-3 float-md-end" data-id="<?= $profileUser->getId() ?>">
                     <div class="text-center text-body-emphasis px-2">
                         <h6 class="mb-0"><?= count($posts) ?></h6>
                         <small>Posts</small>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="vr"></div>
                     <div class="text-center btn-get-followings link-body-emphasis" role="button">
-                        <h6 class="mb-0"><?= count($profileUser->getFollowing()) ?></h6>
+                        <h6 class="mb-0"><?= count($profileUser->getFollowings()) ?></h6>
                         <small>Following</small>
                     </div>
                 </div>

@@ -321,7 +321,7 @@ class User
         return $this->followers;
     }
 
-    public function getFollowing(): Collection
+    public function getFollowings(): Collection
     {
         return $this->following;
     }
