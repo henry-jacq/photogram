@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Follow;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity, ORM\Table(name: 'users')]
 class User
@@ -12,10 +13,10 @@ class User
     #[ORM\Id, ORM\Column(type: 'integer', options: ['unsigned' => true]), ORM\GeneratedValue]
     private int $id;
 
-    #[ORM\Column(type:'string', unique: true)]
+    #[ORM\Column(type: 'string', unique: true)]
     private string $username;
 
-    #[ORM\Column(type:'string', unique: true)]
+    #[ORM\Column(type: 'string', unique: true)]
     private string $email;
 
     #[ORM\Column(type: 'string')]
@@ -51,11 +52,19 @@ class User
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
     private Collection $payments;
 
+    #[ORM\OneToMany(mappedBy: 'follower', targetEntity: Follow::class)]
+    private Collection $followers;
+
+    #[ORM\OneToMany(mappedBy: 'followed', targetEntity: Follow::class)]
+    private Collection $following;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
-        $this->subscriptions = new ArrayCollection();
         $this->payments = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+        $this->following = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
     public function getId(): int
@@ -245,6 +254,60 @@ class User
         if ($this->payments->removeElement($payment)) {
             if ($payment->getUser() === $this) {
                 $payment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function addFollower(Follow $follow): self
+    {
+        if (!$this->followers->contains($follow)) {
+            $this->followers[] = $follow;
+            $follow->setFollowed($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollower(Follow $follow): self
+    {
+        if ($this->followers->removeElement($follow)) {
+            // set the owning side to null (unless already changed)
+            if ($follow->getFollowed() === $this) {
+                $follow->setFollowed(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFollowing(): Collection
+    {
+        return $this->following;
+    }
+
+    public function addFollowing(Follow $follow): self
+    {
+        if (!$this->following->contains($follow)) {
+            $this->following[] = $follow;
+            $follow->setFollower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowing(Follow $follow): self
+    {
+        if ($this->following->removeElement($follow)) {
+            // set the owning side to null (unless already changed)
+            if ($follow->getFollower() === $this) {
+                $follow->setFollower(null);
             }
         }
 
