@@ -1,7 +1,6 @@
 <?php
 
 use Slim\App;
-use App\Core\Auth;
 use App\Core\View;
 use App\Core\Config;
 use App\Core\Request;
@@ -11,8 +10,6 @@ use Doctrine\ORM\ORMSetup;
 use Slim\Factory\AppFactory;
 use Doctrine\ORM\EntityManager;
 use App\Interfaces\SessionInterface;
-use App\Services\PostService;
-use App\Services\UserService;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 
@@ -45,9 +42,6 @@ return [
     Request::class => function(ContainerInterface $container) {
         return new Request($container->get(SessionInterface::class));
     },
-    Auth::class => function(ContainerInterface $container){
-        return new Auth($container->get(EntityManager::class), $container->get(SessionInterface::class));
-    },
     View::class => function (ContainerInterface $container) {
         return new View($container->get(Config::class));
     },
@@ -56,11 +50,5 @@ return [
     },
     ZipArchive::class => function () {
         return new ZipArchive();
-    },
-    PostService::class => function (ContainerInterface $container) {
-        return new PostService($container->get(EntityManager::class));
-    },
-    UserService::class => function (ContainerInterface $container) {
-        return new UserService($container->get(EntityManager::class));
     }
 ];
