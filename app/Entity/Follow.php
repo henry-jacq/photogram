@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Entity, ORM\Table(name: 'follows')]
 class Follow
 {
@@ -12,16 +11,14 @@ class Follow
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "followers")]
-    #[ORM\JoinColumn(name: 'follower_id', referencedColumnName: 'id', nullable: false, onDelete: "CASCADE")]
-    private ?User $follower;
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: "CASCADE")]
+    private ?User $user;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "following")]
     #[ORM\JoinColumn(name: 'follower_id', referencedColumnName: 'id', nullable: false, onDelete: "CASCADE")]
-    private ?User $followed;
+    private ?User $followUser;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: "datetime")]
     private \DateTimeInterface $createdAt;
 
     public function __construct()
@@ -34,25 +31,25 @@ class Follow
         return $this->id;
     }
 
-    public function getFollower(): User
+    public function getUser(): ?User
     {
-        return $this->follower;
+        return $this->user;
     }
 
-    public function setFollower(?User $follower): self
+    public function setUser(?User $user): self
     {
-        $this->follower = $follower;
+        $this->user = $user;
         return $this;
     }
 
-    public function getFollowed(): User
+    public function getFollowUser(): ?User
     {
-        return $this->followed;
+        return $this->followUser;
     }
 
-    public function setFollowed(?User $followed): self
+    public function setFollowUser(?User $followUser): self
     {
-        $this->followed = $followed;
+        $this->followUser = $followUser;
         return $this;
     }
 

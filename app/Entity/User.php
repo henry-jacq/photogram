@@ -52,11 +52,11 @@ class User
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
     private Collection $payments;
 
-    #[ORM\OneToMany(mappedBy: 'follower', targetEntity: Follow::class)]
-    private Collection $followers;
-
-    #[ORM\OneToMany(mappedBy: 'followed', targetEntity: Follow::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Follow::class)]
     private Collection $following;
+
+    #[ORM\OneToMany(mappedBy: 'followUser', targetEntity: Follow::class)]
+    private Collection $followers;
 
     public function __construct()
     {
@@ -260,16 +260,11 @@ class User
         return $this;
     }
 
-    public function getFollowers(): Collection
-    {
-        return $this->followers;
-    }
-
     public function addFollower(Follow $follow): self
     {
         if (!$this->followers->contains($follow)) {
             $this->followers[] = $follow;
-            $follow->setFollowed($this);
+            $follow->setFollowUser($this);
         }
 
         return $this;
@@ -278,25 +273,20 @@ class User
     public function removeFollower(Follow $follow): self
     {
         if ($this->followers->removeElement($follow)) {
-            // set the owning side to null (unless already changed)
-            if ($follow->getFollowed() === $this) {
-                $follow->setFollowed(null);
+            // Set the owning side to null (unless already changed)
+            if ($follow->getFollowUser() === $this) {
+                $follow->setFollowUser(null);
             }
         }
 
         return $this;
     }
 
-    public function getFollowing(): Collection
-    {
-        return $this->following;
-    }
-
     public function addFollowing(Follow $follow): self
     {
         if (!$this->following->contains($follow)) {
             $this->following[] = $follow;
-            $follow->setFollower($this);
+            $follow->setUser($this);
         }
 
         return $this;
@@ -305,12 +295,35 @@ class User
     public function removeFollowing(Follow $follow): self
     {
         if ($this->following->removeElement($follow)) {
-            // set the owning side to null (unless already changed)
-            if ($follow->getFollower() === $this) {
-                $follow->setFollower(null);
+            // Set the owning side to null (unless already changed)
+            if ($follow->getUser() === $this) {
+                $follow->setUser(null);
             }
         }
 
         return $this;
     }
+
+    public function isFollowing(User $user): bool
+    {
+        foreach ($this->following as $follow) {
+            if ($follow->getFollowUser() === $user) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Getters for the collections
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function getFollowing(): Collection
+    {
+        return $this->following;
+    }
+
 }

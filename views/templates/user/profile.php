@@ -22,7 +22,14 @@
             <?php if ($profileUser->getUsername() == $user->getUsername()) : ?>
                 <a href="/profile/edit" class="btn btn-prime btn-sm"><i class="bi bi-pencil me-1"></i>Edit Profile</a>
             <?php else : ?>
-                <button class="btn btn-sm btn-primary btn-follow" data-id="<?= $profileUser->getId() ?>"><i class="bi-person-add me-1"></i>Follow</button>
+                <button class="btn btn-sm btn-primary btn-follow" data-id="<?= $profileUser->getId() ?>">
+                    <?php
+                    if ($user->isFollowing($profileUser)) : ?>
+                        <i class="bi-person-check me-1"></i>Following
+                        <?php else : ?>
+                            <i class="bi-person-add me-1"></i>Follow
+                    <?php endif; ?>
+                </button>
                 <button class="btn btn-sm btn-secondary" onclick="dialog('Not Implemented!',' This feature is not implemented');"><i class="bi bi-chat-left-text-fill me-1"></i>Message</button>
             <?php endif; ?>
         </div>
@@ -56,12 +63,12 @@
                     </div>
                     <div class="vr"></div>
                     <div class="text-center btn-get-followers link-body-emphasis" role="button">
-                        <h6 class="mb-0">0</h6>
+                        <h6 class="mb-0"><?= count($profileUser->getFollowers()) ?></h6>
                         <small>Followers</small>
                     </div>
                     <div class="vr"></div>
                     <div class="text-center btn-get-followings link-body-emphasis" role="button">
-                        <h6 class="mb-0">0</h6>
+                        <h6 class="mb-0"><?= count($profileUser->getFollowing()) ?></h6>
                         <small>Following</small>
                     </div>
                 </div>

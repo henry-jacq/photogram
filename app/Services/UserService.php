@@ -6,8 +6,10 @@ namespace App\Services;
 
 use Exception;
 use App\Entity\User;
+use App\Entity\Follow;
 use App\Entity\UserData;
 use App\Entity\UserEmail;
+use InvalidArgumentException;
 use Doctrine\ORM\EntityManager;
 
 
@@ -217,4 +219,37 @@ class UserService
         $this->em->flush();
         return true;
     }
+
+    public function toggleFollow(User $user, int $followerId): bool
+    {
+        $followUser = $this->getUserById($followerId);
+        $followRepository = $this->em->getRepository(Follow::class);
+
+        // Check if a follow relationship already exists
+        $existingFollow = $followRepository->findOneBy([
+            'user' => $user,
+            'followUser' => $followUser,
+        ]);
+
+        if ($existingFollow) {
+            // Unfollow logic
+            $user->removeFollowing($existingFollow);
+            $followUser->removeFollower($existingFollow);
+
+            $this->em->remove($existingFollow);
+            $this->em->flush();
+
+            return false; // Return false indicating unfollowed
+        } else {
+            // Follow logic
+            $follow = new Follow();
+            $follow->setUser($user);
+            $follow->setFollowUser($followUser);
+            $this->em->persist($follow);
+            $this->em->flush();
+
+            return true; // Return true indicating followed
+        }
+    }
+
 }
