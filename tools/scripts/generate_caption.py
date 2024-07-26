@@ -1,18 +1,15 @@
-from transformers import VisionEncoderDecoderModel, ViTImageProcessor, GPT2Tokenizer
+import sys
 import torch
 from PIL import Image
-import logging, sys
+import logging
+from transformers import BlipProcessor, BlipForConditionalGeneration
 
 # Set logging level to ERROR to suppress warnings
 logging.getLogger("transformers").setLevel(logging.ERROR)
 
 # Load the model and processor
-model = VisionEncoderDecoderModel.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-image_processor = ViTImageProcessor.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-tokenizer = GPT2Tokenizer.from_pretrained("nlpconnect/vit-gpt2-image-captioning")
-
-# Set pad_token_id to eos_token_id to avoid padding issues
-tokenizer.pad_token_id = tokenizer.eos_token_id
+processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
+model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-large").to("cuda")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
@@ -20,20 +17,19 @@ model.to(device)
 def preprocess_image(image_path):
     # Load and preprocess the image
     image = Image.open(image_path).convert("RGB")
-    encoding = image_processor(images=image, return_tensors="pt")
-    return encoding
+    return image
 
 def generate_caption(image_paths):
     captions = []
     for image_path in image_paths:
-        encoding = preprocess_image(image_path)
-        pixel_values = encoding.pixel_values.to(device)
+        image = preprocess_image(image_path)
+        inputs = processor(images=image, return_tensors="pt").to(device)
 
         # Generate the caption
-        output_ids = model.generate(pixel_values, max_length=16, num_beams=4, early_stopping=True)
+        output = model.generate(**inputs, max_length=16, num_beams=4, early_stopping=True)
         
         # Decode the output ids to generate the caption
-        caption = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+        caption = processor.decode(output[0], skip_special_tokens=True)
         captions.append(caption)
     return captions
 
