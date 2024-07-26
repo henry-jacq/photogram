@@ -81,7 +81,7 @@ class UserService
     /**
      * Get the user by id
      */
-    public function getUserById(int $id): User
+    public function getUserById(int $id): ?User
     {
         $user = $this->em->getRepository(User::class)->find($id);
         return $user;
@@ -252,4 +252,33 @@ class UserService
         }
     }
 
+    public function getFollowers(User $user)
+    {
+        $followers = [];
+        foreach ($user->getFollowers() as $follower) {
+            $followUser = $follower->getUser();
+            $followers[] = [
+                'id' => $followUser->getId(),
+                'username' => $followUser->getUsername(),
+                'fullname' => $followUser->getUserData()->getFullname(),
+                'avatar' => $followUser->getUserData()->getAvatarURL(),
+            ];
+        }
+        return $followers;
+    }
+
+    public function getFollowings(User $user)
+    {
+        $followers = [];
+        foreach ($user->getFollowings() as $follower) {
+            $followUser = $follower->getFollowUser();
+            $followers[] = [
+                'id' => $followUser->getId(),
+                'username' => $followUser->getUsername(),
+                'fullname' => $followUser->getUserData()->getFullname(),
+                'avatar' => $followUser->getUserData()->getProfileAvatar(),
+            ];
+        }
+        return $followers;
+    }
 }
