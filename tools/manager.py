@@ -2,11 +2,10 @@ import os
 import sys
 import subprocess
 import logging
-import warnings
 from setup import root_dir, hf_home_dir
 
-# Suppress specific FutureWarning related to TRANSFORMERS_CACHE
-warnings.filterwarnings("ignore", category=FutureWarning, module="transformers.utils.hub")
+# Set logging level to ERROR to suppress warnings
+logging.getLogger("transformers").setLevel(logging.ERROR)
 
 # Define paths and environment
 scripts_dir = os.path.join(os.path.dirname(__file__), 'scripts')

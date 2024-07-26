@@ -215,7 +215,7 @@ function pyToolExecuter($scriptKey, $args = [])
     $command = escapeshellcmd("$pythonExecutable $pythonScriptPath $scriptKey " . implode(' ', array_map('escapeshellarg', $args)));
 
     // Execute the command and capture the output
-    $output = trim(shell_exec($command));
+    $output = shell_exec($command);
 
     // Check for execution errors
     if ($output === null) {
@@ -227,5 +227,5 @@ function pyToolExecuter($scriptKey, $args = [])
         throw new Exception("Python script returned an error: $output");
     }
 
-    return $output;
+    return trim($output);
 }
