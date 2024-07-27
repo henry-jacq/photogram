@@ -276,7 +276,7 @@ class UserService
                 'id' => $followUser->getId(),
                 'username' => $followUser->getUsername(),
                 'fullname' => $followUser->getUserData()->getFullname(),
-                'avatar' => $followUser->getUserData()->getProfileAvatar(),
+                'avatar' => $followUser->getUserData()->getAvatarURL(),
             ];
         }
         return $followers;
