@@ -154,8 +154,10 @@ $('#postUploadButton').on('click', function () {
         var myDropzone = new Dropzone("#dzCreatePost", {
             url: "/api/posts/create",
             paramName: "file",
+            // Max 20 files can be uploaded at a time for php
             maxFiles: 2,
-            maxFilesize: 5,
+            // Max 50MB per file for php
+            maxFilesize: 50,
             parallelUploads: 2,
             uploadMultiple: true,
             acceptedFiles: ".png,.jpeg,.jpg,.gif",

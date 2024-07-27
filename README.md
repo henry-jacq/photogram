@@ -183,6 +183,12 @@ sudo chmod -R 755 storage/
 sudo usermod -aG <username> www-data 
 ```
 
+For changing max upload size:
+- Edit the php.ini file and change the following values
+```php
+upload_max_filesize = 50M
+post_max_size = 50M
+```
 
 ## Usage
 
