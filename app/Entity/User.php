@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Follow;
+use App\Entity\UserEmail;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,20 +17,11 @@ class User
     #[ORM\Column(type: 'string', unique: true)]
     private string $username;
 
-    #[ORM\Column(type: 'string', unique: true)]
-    private string $email;
-
     #[ORM\Column(type: 'string')]
     private string $password;
 
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
-
-    #[ORM\Column(type: 'boolean', options: ['default' => false])]
-    private bool $is2FAEnabled = false;
-
-    #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $twoFactorSecret = null;
 
     #[ORM\Column(type: 'string', name: 'reset_token', nullable: true)]
     private ?string $resetToken;
@@ -39,6 +31,9 @@ class User
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private UserData $userData;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserEmail::class, cascade: ['persist', 'remove'])]
+    private Collection $emails;
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Preferences $preferences;
@@ -61,6 +56,7 @@ class User
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->emails = new ArrayCollection();
         $this->payments = new ArrayCollection();
         $this->followers = new ArrayCollection();
         $this->following = new ArrayCollection();
@@ -83,17 +79,6 @@ class User
         return $this;
     }
 
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-        return $this;
-    }
-
     public function getPassword(): string
     {
         return $this->password;
@@ -113,28 +98,6 @@ class User
     public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function is2FAEnabled(): bool
-    {
-        return $this->is2FAEnabled;
-    }
-
-    public function setIs2FAEnabled(bool $is2FAEnabled): self
-    {
-        $this->is2FAEnabled = $is2FAEnabled;
-        return $this;
-    }
-
-    public function getTwoFactorSecret(): ?string
-    {
-        return $this->twoFactorSecret;
-    }
-
-    public function setTwoFactorSecret(?string $twoFactorSecret): self
-    {
-        $this->twoFactorSecret = $twoFactorSecret;
         return $this;
     }
 
@@ -334,5 +297,45 @@ class User
     public function getFollowingsCount(): int
     {
         return $this->following->count();
+    }
+
+    /**
+     * @return Collection|UserEmail[]
+     */
+    public function getEmails(): Collection
+    {
+        return $this->emails;
+    }
+
+    public function addEmail(UserEmail $email): self
+    {
+        if (!$this->emails->contains($email)) {
+            $this->emails[] = $email;
+            $email->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEmail(UserEmail $email): self
+    {
+        if ($this->emails->removeElement($email)) {
+            // set the owning side to null (unless already changed)
+            if ($email->getUser() === $this) {
+                $email->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPrimaryEmail(): ?UserEmail
+    {
+        foreach ($this->emails as $email) {
+            if ($email->isPrimary()) {
+                return $email;
+            }
+        }
+        return null;
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
 ${basename(__FILE__, '.php')} = function () {  
-    if ($this->paramsExists(['user', 'password'])) {
+    if ($this->paramsExists(['username', 'password'])) {
         $data = [
-            'user' => $this->data['user'],
+            'username' => $this->data['username'],
             'password' => $this->data['password'],
             'ipAddress' => $this->getServerParam('REMOTE_ADDR'),
             'userAgent' => $this->getServerParam('HTTP_USER_AGENT')

@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Core\Session;
 use App\Entity\Storage;
 use App\Entity\UserData;
+use App\Entity\UserEmail;
 use App\Enum\StorageSpace;
 use App\Entity\Preferences;
 use App\Entity\UserSession;
@@ -31,21 +32,17 @@ class AuthService
      */
     public function register(array $credentials)
     {
-        // Check for existing user with the same username or email
-        $user = $this->em->getRepository(User::class)->createQueryBuilder('u')
-            ->where('u.username = :username OR u.email = :email')
-            ->setParameter('username', $credentials['username'])
-            ->setParameter('email', $credentials['email'])
-            ->getQuery()
-            ->getOneOrNullResult();
+        $existingUser = $this->user->exists([
+            'username' => $credentials['username'],
+            'email' => $credentials['email']
+        ]);
 
         // If the user exists, return false
-        if ($user) {
+        if ($existingUser) {
             return false;
         }
 
         $user = new User();
-        $user->setEmail($credentials['email']);
         $user->setUsername($credentials['username']);
         $user->setPassword(password_hash($credentials['password'], PASSWORD_DEFAULT, ['cost' => 12]));
         $user->setCreatedAt(new \DateTime());
@@ -76,6 +73,12 @@ class AuthService
         $preferences->setUser($user);
         $preferences->setTheme(PreferredTheme::Dark->value);
         $this->em->persist($preferences);
+
+        $userEmail = new UserEmail();
+        $userEmail->setUser($user);
+        $userEmail->setEmail($credentials['email']);
+        $userEmail->setIsPrimary(true);
+        $this->em->persist($userEmail);
         
         $this->em->flush();
         return true;
@@ -84,7 +87,7 @@ class AuthService
     /**
      * Login user with username or email
      */
-    public function login(array $data): bool
+    public function login(array $data)
     {
         // Check if the session is already active
         $currentSessionID = $this->session->getId();
@@ -93,12 +96,7 @@ class AuthService
             return false;
         }
 
-        // Check if the user exists with the given username or email
-        $user = $this->em->getRepository(User::class)->createQueryBuilder('u')
-            ->where('u.username = :user OR u.email = :user')
-            ->setParameter('user', $data['user'])
-            ->getQuery()
-            ->getOneOrNullResult();
+        $user = $this->user->getByUsername($data['username']);
 
         if ($user && password_verify($data['password'], $user->getPassword())) {
             

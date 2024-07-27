@@ -6,8 +6,8 @@
                 <h4 class="fw-light text-center mb-4">Photogram</h4>
                 <hr class="mb-4">
                 <h5 class="fw-semi-bold mb-4">Login</h5>
-                <label for="user" class="form-label">Username or email</label>
-                <input type="text" id="user" name="user" class="form-control mb-3 bg-transparent" required="">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control mb-3 bg-transparent" required="">
                 <label for="pass" class="form-label">Password</label>
                 <div class="input-group mb-3">
                     <input type="password" id="pass" name="password" class="form-control bg-transparent" required="">
@@ -28,7 +28,6 @@
                 </div>
                 <div class="d-grid gap-3">
                     <button type="submit" class="btn btn-login text-body border-0 bg-prime bg-opacity-75 focus-ring focus-ring-prime">Login now!</button>
-                    <button type="button" class="btn btn-google-login border border-body bg-body bg-opacity-25 focus-ring focus-ring-secondary"><i class="bi bi-google me-2"></i>Login With Google</button>
                     <p class="text-center text-muted">Want to join Photogram? <a href="/register">Register now</a>.</p>
                 </div>
             </div>

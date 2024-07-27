@@ -23,7 +23,7 @@ class ProfileController extends Controller
     {
         $userData = $request->getAttribute('userData');
         $name = strtolower($request->getAttribute('name'));
-        $profileUser = $this->user->getUserByEmailOrUsername($name);
+        $profileUser = $this->user->getByUsername($name);
         $posts = $this->post->fetchUserPosts($profileUser);
         $totalLikes = $this->post->getTotalUserLikes($profileUser);
 

@@ -24,7 +24,7 @@
                     <div class="form-group mb-3">
                         <label class="d-block mb-2">Notification Email</label>
                         <select class="form-select" aria-label="Default select example">
-                            <option selected="">henrytest@gmail.com</option>
+                            <option selected=""><?= $user->getPrimaryEmail()?></option>
                         </select>
                     </div>
                     <div class="form-group">

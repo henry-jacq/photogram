@@ -4,36 +4,23 @@
             <div class="card-body">
                 <h5 class="card-title">Manage Email</h5>
                 <hr>
-                <div class="mb-3">
-                    <p>You can control emails linked to your account.</p>
-                </div>
-                <h6 class="mt-4">Display Email</h6>
-                <hr class="mt-0 mb-2">
-                <div class="form-group mb-3">
-                    <select class="form-select" aria-label="Email visibility select">
-                        <option value="public">Public</option>
-                        <option value="private" selected>Private</option>
-                    </select>
-                    <small class="form-text text-muted">Choose email visibility</small>
-                </div>
+                <h6 class="mt-4">Email linked to your account:</h6>
+                <ul class="list-group mt-2">
+                    <li class="list-group-item">
+                        <i class="bi bi-envelope me-2"></i>
+                        <?= $user->getPrimaryEmail() ?>
+                        <span class="badge bg-prime rounded-pill ms-2">Primary</span>
+                    </li>
+                </ul>
                 <h6 class="mt-4">Set Your Primary Email</h6>
                 <hr class="mt-0 mb-2">
                 <div class="form-group mb-3">
                     <select class="form-select" aria-label="Primary email select">
-                        <option value="<?= $user->getEmail() ?>"><?= $user->getEmail() ?></option>
+                        <option value="<?= $user->getPrimaryEmail() ?>"><?= $user->getPrimaryEmail() ?></option>
                     </select>
                     <span class="form-text">For Notification Purposes</span><br>
                     <button class="btn btn-sm btn-prime mt-2">Save Changes</button>
                 </div>
-                <h6 class="mt-4">Email linked to your account:</h6>
-                <hr class="mt-0 mb-2">
-                <ul class="list-group mt-2">
-                    <li class="list-group-item">
-                        <i class="bi bi-envelope me-2"></i>
-                        <?= $user->getEmail() ?>
-                        <span class="badge bg-prime rounded-pill ms-2">Primary</span>
-                    </li>
-                </ul>
                 <h6 class="mt-4">Add Email Address</h6>
                 <hr class="mt-0 mb-2">
                 <form>

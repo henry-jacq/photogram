@@ -12,9 +12,9 @@ class UserEmail
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'emails')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private User $user;
+    private ?User $user;
 
-    #[ORM\Column(type: 'string', nullable: false)]
+    #[ORM\Column(type: 'string', unique: true, nullable: false)]
     private string $email;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
@@ -26,12 +26,12 @@ class UserEmail
         return $this->id;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 

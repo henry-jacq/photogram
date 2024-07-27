@@ -5,7 +5,7 @@
                 <?php $userData = $user->getUserData(); ?>
                 <img class="rounded-circle border border-2 border-prime" width="150" src="<?= $userData->getAvatarURL() ?>">
                 <span class="fs-5 fw-semibold mt-2"><?= $userData->getFullName() ?></span>
-                <span class="small mt-2"><?= $user->getEmail() ?></span>
+                <span class="small mt-2"><?= $user->getPrimaryEmail() ?></span>
             </div>
         </div>
         <div class="col-lg-9 profile-body">

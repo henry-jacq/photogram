@@ -16,7 +16,7 @@ $appEnv = $_ENV['APP_ENV'] ?? AppEnvironment::Production->value;
 
 return [
     'app' => [
-        'name' => $_ENV['APP_NAME'],
+        'name' => $_ENV['APP_NAME'] ?? 'Photogram',
         'host' => $_ENV['APP_URL'] ?? 'http://localhost',
         'version' => $_ENV['APP_VERSION'] ?? '1.0',
         'display_error_details' => $boolean($_ENV['APP_DEBUG'] ?? 0),
@@ -24,16 +24,16 @@ return [
         'log_error_details' => true,
     ],
     'doctrine' => [
-        'dev_mode' => AppEnvironment::isDevelopment($appEnv),
+        'dev_mode' => AppEnvironment::isDevelopment($appEnv) ?? 'development',
         'cache_dir' => STORAGE_PATH . '/cache/doctrine',
         'entity_dir' => [APP_PATH . '/Entity'],
         'connection' => [
             'driver' => $_ENV['DB_DRIVER'] ?? 'pdo_mysql',
-            'host' => $_ENV['DB_HOST'],
+            'host' => $_ENV['DB_HOST'] ?? 'localhost',
             'port' => $_ENV['DB_PORT'] ?? 3306,
-            'dbname' => $_ENV['DB_NAME'],
-            'user' => $_ENV['DB_USER'],
-            'password' => $_ENV['DB_PASS'],
+            'dbname' => $_ENV['DB_NAME'] ?? 'photogram_db',
+            'user' => $_ENV['DB_USER'] ?? 'henry',
+            'password' => $_ENV['DB_PASS'] ?? 'lamp@unix098',
         ]
     ],
     'mail' => [

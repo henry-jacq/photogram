@@ -88,20 +88,21 @@ class UserService
     }
 
     /**
+     * Check if the user exists by username and email
+     */
+    public function exists(array $data): bool
+    {
+        $user = $this->em->getRepository(User::class)->findOneBy(['username' => $data['username']]);
+        $userEmail = $this->em->getRepository(UserEmail::class)->findOneBy(['email' => $data['email']]);
+        return $user && $userEmail ? true : false;
+    }
+
+    /**
      * Get the user by email or username
      */
-    public function getUserByEmailOrUsername(string $emailOrUsername): ?User
+    public function getByUsername(string $username): ?User
     {
-        $user = $this->em->getRepository(User::class)->createQueryBuilder('u')
-        ->where('u.email = :emailOrUsername')
-        ->orWhere('u.username = :emailOrUsername')
-        ->setParameter('emailOrUsername',
-            $emailOrUsername
-        )
-        ->getQuery()
-        ->getOneOrNullResult();
-
-        return $user;
+        return $this->em->getRepository(User::class)->findOneBy(['username' => $username]);
     }
 
     /**
