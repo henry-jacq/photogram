@@ -8,6 +8,12 @@ ${basename(__FILE__, '.php')} = function () {
             $user = $this->getUser();
             $follower_id = (int) $this->data['follower_id'];
 
+            if ($user->getId() == $follower_id) {
+                return $this->response([
+                    'message' => 'You cannot follow yourself'
+                ], 400);
+            }
+
             $result = $this->user->toggleFollow($user, $follower_id);
 
             return $this->response([
