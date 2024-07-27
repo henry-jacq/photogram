@@ -63,12 +63,12 @@
                     </div>
                     <div class="vr"></div>
                     <div class="text-center btn-get-followers link-body-emphasis" role="button">
-                        <h6 class="mb-0"><?= count($profileUser->getFollowers()) ?></h6>
+                        <h6 class="mb-0"><?= $profileUser->getFollowersCount() ?></h6>
                         <small>Followers</small>
                     </div>
                     <div class="vr"></div>
                     <div class="text-center btn-get-followings link-body-emphasis" role="button">
-                        <h6 class="mb-0"><?= count($profileUser->getFollowings()) ?></h6>
+                        <h6 class="mb-0"><?= $profileUser->getFollowingsCount() ?></h6>
                         <small>Following</small>
                     </div>
                 </div>

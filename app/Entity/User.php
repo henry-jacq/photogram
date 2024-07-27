@@ -326,4 +326,13 @@ class User
         return $this->following;
     }
 
+    public function getFollowersCount(): int
+    {
+        return $this->followers->count();
+    }
+
+    public function getFollowingsCount(): int
+    {
+        return $this->following->count();
+    }
 }
