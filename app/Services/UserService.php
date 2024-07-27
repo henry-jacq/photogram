@@ -93,8 +93,14 @@ class UserService
     public function exists(array $data): bool
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['username' => $data['username']]);
+        if ($user) {
+            return true;
+        }
         $userEmail = $this->em->getRepository(UserEmail::class)->findOneBy(['email' => $data['email']]);
-        return $user && $userEmail ? true : false;
+        if ($userEmail) {
+            return true;
+        }
+        return false;    
     }
 
     /**
