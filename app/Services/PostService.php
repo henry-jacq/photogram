@@ -10,6 +10,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\Comment;
+use App\Entity\Storage;
 use Doctrine\ORM\EntityManager;
 
 
@@ -35,12 +36,15 @@ class PostService
         $post = new Post();
 
         $fullPaths = [];
+        $totalImageSize = 0;
+
         foreach ($data['images'] as $imagePath) {
             $image = new Image();
             $name = $this->saveImage($imagePath);
             $image->setImagePath($name);
             $post->addImage($image);
             $fullPaths[] = $this->storagePath . $name;
+            $totalImageSize += filesize($this->storagePath . $name);
         }
 
         if ($data['ai_caption'] === 'true') {
@@ -55,6 +59,10 @@ class PostService
         $post->setIsArchived(false);
 
         $this->em->persist($post);
+
+        // Update the user's storage
+        $this->updateUserStorage($data['user'], $totalImageSize);
+
         $this->em->flush();
 
         return true;
@@ -74,6 +82,44 @@ class PostService
             return false;
         }
     }
+
+    /**
+     * Update the user's storage details
+     */
+    private function updateUserStorage(User $user, int $imageSize, bool $addUsedSpace = true): void
+    {
+        $storage = $user->getStorage();
+
+        if (!$storage) {
+            throw new Exception("Storage not found.");
+        }
+
+        $usedSpace = $storage->getUsedSpace();
+        $totalSpace = $storage->getTotalSpace();
+        $remainingSpace = $storage->getRemainingSpace();
+
+        if ($addUsedSpace) {
+            $usedSpace += $imageSize;
+        } else {
+            $usedSpace -= $imageSize;
+        }
+
+        if ($usedSpace > $totalSpace) {
+            // Handle storage limit exceeded
+            // For example, you can log an error message or send a notification to the user
+            // You can also implement a storage cleanup mechanism to free up space
+            // Here's an example of logging an error message:
+            error_log("Storage limit exceeded for user: " . $user->getId());
+            throw new Exception("Storage limit exceeded.");
+        }
+
+        $remainingSpace = $totalSpace - $usedSpace;
+
+        $storage->setUsedSpace($usedSpace);
+        $storage->setRemainingSpace($remainingSpace);
+        $this->em->persist($storage);
+    }
+
 
     /**
      * Generate AI based caption for the images
@@ -134,12 +180,20 @@ class PostService
      */
     public function deleteImages(Post $post): bool
     {
+        $user = $post->getUser();
+        $totalImageSize = 0;
+
         foreach ($post->getImages() as $image) {
             $imagePath = $this->storagePath . $image->getImagePath();
             if (file_exists($imagePath) && is_file($imagePath)) {
+                $totalImageSize += filesize($imagePath);
                 unlink($imagePath);
             }
         }
+
+        // Update the user's storage
+        $this->updateUserStorage($user, $totalImageSize, false);
+        
         return true;
     }
 

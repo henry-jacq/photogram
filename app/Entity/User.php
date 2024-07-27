@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Follow;
+use App\Entity\Storage;
 use App\Entity\UserEmail;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -32,11 +33,14 @@ class User
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private UserData $userData;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserEmail::class, cascade: ['persist', 'remove'])]
-    private Collection $emails;
-
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private Preferences $preferences;
+
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Storage::class, cascade: ['persist', 'remove'])]
+    private ?Storage $storage;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserEmail::class, cascade: ['persist', 'remove'])]
+    private Collection $emails;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Post::class)]
     private Collection $posts;
@@ -61,6 +65,7 @@ class User
         $this->followers = new ArrayCollection();
         $this->following = new ArrayCollection();
         $this->subscriptions = new ArrayCollection();
+        $this->storage = null;
     }
 
     public function getId(): int
@@ -338,4 +343,19 @@ class User
         }
         return null;
     }
+
+    public function getStorage(): ?Storage
+    {
+        return $this->storage;
+    }
+
+    public function setStorage(?Storage $storage): self
+    {
+        $this->storage = $storage;
+        if ($storage) {
+            $storage->setUser($this);
+        }
+        return $this;
+    }
+
 }

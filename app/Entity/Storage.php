@@ -12,7 +12,7 @@ class Storage
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, unique: true, onDelete: 'CASCADE')]
     private User $user;
 
     #[ORM\Column(type: 'float', name:'total_space', options: ['unsigned' => true])]

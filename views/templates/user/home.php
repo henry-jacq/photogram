@@ -1,5 +1,10 @@
 <div class="container px-md-5">
     <div class="post-feed-section py-4">
+        <?php
+        echo('<p>Used Space: ' . formatSizeUnits($user->getStorage()->getUsedSpace()) . '</p>');
+        echo('<p>Remaining Space: ' . formatSizeUnits($user->getStorage()->getRemainingSpace()) . '</p>');
+        echo('<p>Total Space: ' . formatSizeUnits($user->getStorage()->getTotalSpace()) . '</p>');
+        ?>
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="fw-light mt-3">My Feed</h3>
             <div class="d-none d-md-inline-block">
