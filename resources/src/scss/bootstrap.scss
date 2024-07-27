@@ -2,6 +2,9 @@
 @import '../../../node_modules/bootstrap/scss/functions';
 @import '../../../node_modules/bootstrap/scss/variables';
 @import '../../../node_modules/bootstrap/scss/variables-dark';
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 // Custom styles
 $link-decoration: none;
@@ -38,6 +41,11 @@ $custom-theme-colors: (
 
 // Merge custom theme colors with Bootstrap theme colors
 $theme-colors: map-merge($custom-theme-colors, $theme-colors);
+
+/* Define custom fonts */
+:root {
+    --bs-body-font-family: 'Lato', 'Source sans', 'Roboto', sans-serif !important;
+}
 
 // Define custom scrollbar styles
 ::-webkit-scrollbar {
