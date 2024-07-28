@@ -1,10 +1,26 @@
 <div class="container px-md-5">
     <div class="post-feed-section py-4">
         <?php
-        echo('<p>Used Space: ' . formatSizeUnits($user->getStorage()->getUsedSpace()) . '</p>');
-        echo('<p>Remaining Space: ' . formatSizeUnits($user->getStorage()->getRemainingSpace()) . '</p>');
-        echo('<p>Total Space: ' . formatSizeUnits($user->getStorage()->getTotalSpace()) . '</p>');
+        $usedSpace = $user->getStorage()->getUsedSpace();
+        $totalSpace = $user->getStorage()->getTotalSpace();
+        $remainingSpace = $totalSpace - $usedSpace;
+        $usedPercentage = ($usedSpace / $totalSpace) * 100;
+        $remainingPercentage = ($remainingSpace / $totalSpace) * 100;
         ?>
+        <div class="rounded p-3 mb-2 bg-body-tertiary">
+            <h3 class="lead fw-normal mb-3"><i class="bi bi-cloud me-2"></i>Storage Details</h3>
+            <div class="progress mt-3 storage-progress">
+                <div class="progress-bar bg-primary" role="progressbar" style="width: <?php echo $usedPercentage; ?>%;" aria-valuenow="<?php echo $usedPercentage; ?>" aria-valuemin="0" aria-valuemax="100">
+                </div>
+                <div class="progress-bar bg-body-secondary" role="progressbar" style="width: <?php echo $remainingPercentage; ?>%;" aria-valuenow="<?php echo $remainingPercentage; ?>" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+            <div class="mb-2 storage-detail-text">
+                <small class="small text-body-secondary"><?= formatSizeUnits($usedSpace); ?> of <?= formatSizeUnits($totalSpace); ?> used</small>
+            </div>
+            <a href="/subscribe" class="btn btn-sm btn-warning mt-3">Buy Storage</a>
+        </div>
+
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="fw-light mt-3">My Feed</h3>
             <div class="d-none d-md-inline-block">
@@ -20,7 +36,7 @@
         <?php if (!$posts && count($posts) < 1) : ?>
             <div class="text-center py-5">
                 <i class="bi bi-plus-circle display-4 mb-4"></i>
-                <p class="text-muted text-center align-items-center mb-0 ">Start sharing posts to make it better place!</p>
+                <p class="text-muted text-center align-items-center mb-0 ">Start sharing posts to make it a better place!</p>
             </div>
         <?php else : ?>
             <div class="row g-3" id="masonry-area" data-masonry='{ "percentPosition": true }'>
