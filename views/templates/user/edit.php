@@ -16,7 +16,7 @@
             <form class="user-form-data p-3" method="POST" autocomplete="off">
                 <div class="form-group mb-3">
                     <label for="user-avatar" class="form-label fw-semibold">Upload new avatar</label>
-                    <p class="small mb-2">You can change your avatar here or remove the current avatar to revert to <a href="https://dicebear.com" class="text-decoration-none" target="_blank">dicebear.com</a></p>
+                    <p class="small mb-2">You can change your avatar here or remove the current avatar to revert to the default avatar.</p>
                     <input class="form-control" type="file" id="user-avatar" name="user_image">
                     <div class="text-secondary small mb-2">The maximum file size allowed is 800KB.</div>
                     <?php if (!empty($userData->getAvatarURL()) && basename($userData->getAvatarURL()) != 'default.png') : ?>

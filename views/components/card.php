@@ -8,7 +8,8 @@
                 </div>
                 <div class="skeleton-header">
                     <div class="nav nav-divider">
-                        <h7 class="nav-item card-title mb-0"> <a href="/profile/<?= $p->getUser()->getUsername() ?>" class="text-decoration-none link-body-emphasis" style="color: var(--bs-dark-text)"><?= ucfirst($p->getUser()->getUsername()) ?></a>
+                        <h7 class="nav-item card-title mb-0">
+                            <a href="/profile/<?= $p->getUser()->getUsername() ?>" class="text-decoration-none link-body-emphasis"><?= ucfirst($p->getUser()->getUsername()) ?></a>
                         </h7>
 
                         <div class="ms-1 align-items-center justify-content-between">
@@ -54,18 +55,18 @@
                             </a>
                         </li>
                         <li data-id="<?= $p->getId() ?>">
-                            <li data-id="<?= $p->getId() ?>">
-                                <a class="dropdown-item btn-archive-post" role="button" data-archived="<?= $p->getIsArchived() ?>">
-                                    <?php if ($p->getIsArchived()) : ?>
-                                        <i class="fa-solid fa-plus"></i>
-                                        <span class="ms-2">Show on Profile</span>
-                                    <?php else: ?>
-                                        <i class="fa-solid fa-clock-rotate-left"></i>
-                                        <span class="ms-2">Archive</span>
-                                    <?php endif; ?>
-                                </a>
-                            </li>
+                        <li data-id="<?= $p->getId() ?>">
+                            <a class="dropdown-item btn-archive-post" role="button" data-archived="<?= $p->getIsArchived() ?>">
+                                <?php if ($p->getIsArchived()) : ?>
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span class="ms-2">Show on Profile</span>
+                                <?php else : ?>
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                    <span class="ms-2">Archive</span>
+                                <?php endif; ?>
                             </a>
+                        </li>
+                        </a>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
