@@ -6,17 +6,19 @@
         $remainingSpace = $totalSpace - $usedSpace;
         $usedPercentage = ($usedSpace / $totalSpace) * 100;
         $remainingPercentage = ($remainingSpace / $totalSpace) * 100;
+        $progressBarClass = $usedPercentage >= 80 ? 'bg-danger' : 'bg-primary';
         ?>
         <div class="rounded p-3 mb-2 bg-body-tertiary">
-            <h3 class="lead fw-normal mb-3"><i class="bi bi-cloud me-2"></i>Storage Details</h3>
+            <h3 class="lead fw-normal mb-3"><i class="bi bi-cloud me-2"></i>Storage (<?= number_format($usedPercentage) ?>% full)</h3>
             <div class="progress mt-3 storage-progress">
-                <div class="progress-bar bg-primary" role="progressbar" style="width: <?php echo $usedPercentage; ?>%;" aria-valuenow="<?php echo $usedPercentage; ?>" aria-valuemin="0" aria-valuemax="100">
-                </div>
-                <div class="progress-bar bg-body-secondary" role="progressbar" style="width: <?php echo $remainingPercentage; ?>%;" aria-valuenow="<?php echo $remainingPercentage; ?>" aria-valuemin="0" aria-valuemax="100">
-                </div>
+                <div class="progress-bar <?php echo $progressBarClass; ?>" role="progressbar" style="width: <?php echo $usedPercentage; ?>%;" aria-valuenow="<?php echo $usedPercentage; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                <?php if ($usedPercentage < 100) : ?>
+                    <div class="progress-bar bg-body-secondary" role="progressbar" style="width: <?php echo $remainingPercentage; ?>%;" aria-valuenow="<?php echo $remainingPercentage; ?>" aria-valuemin="0" aria-valuemax="100">
+                    </div>
+                <?php endif; ?>
             </div>
-            <div class="mb-2 storage-detail-text">
-                <small class="small text-body-secondary"><?= formatSizeUnits($usedSpace); ?> of <?= formatSizeUnits($totalSpace); ?> used</small>
+            <div class="text-body-secondary">
+                <small><?= formatSizeUnits($usedSpace); ?> of <?= formatSizeUnits($totalSpace); ?> used</small>
             </div>
             <a href="/subscribe" class="btn btn-sm btn-warning mt-3">Buy Storage</a>
         </div>

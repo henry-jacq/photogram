@@ -20,7 +20,15 @@ ${basename(__FILE__, '.php')} = function () {
             'user_caption' => $this->data['user_caption'],
         ];
 
-        if ($this->post->createPost($data)) {
+        $result = $this->post->createPost($data);
+
+        if (is_string($result)) {
+            return $this->response([
+                'message' => $result
+            ], 413);
+        }
+        
+        if ($result) {
             if ($this->data['ai_caption'] !== 'true') {
                 usleep(mt_rand(1500000, 2800000));
             }

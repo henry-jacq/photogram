@@ -31,7 +31,7 @@ class PostService
     /**
      * Create a new post
      */
-    public function createPost(array $data): bool
+    public function createPost(array $data): string|bool
     {
         $post = new Post();
 
@@ -47,6 +47,26 @@ class PostService
             $totalImageSize += filesize($this->storagePath . $name);
         }
 
+        // Update the user's storage
+        $result = $this->updateUserStorage($data['user'], $totalImageSize);
+
+        // If storage limit exceeded
+        if (!$result) {
+            // Delete the images stored
+            foreach ($post->getImages() as $image) {
+                $imagePath = $this->storagePath . $image->getImagePath();
+                if (file_exists($imagePath) && is_file($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
+            // Remove the post trying to be created
+            $this->em->remove($post);
+            $this->em->flush();
+
+            return 'Storage limit exceeded';
+        }
+
         if ($data['ai_caption'] === 'true') {
             $caption = $this->generateCaption($fullPaths);
             $post->setCaption($caption);
@@ -59,9 +79,6 @@ class PostService
         $post->setIsArchived(false);
 
         $this->em->persist($post);
-
-        // Update the user's storage
-        $this->updateUserStorage($data['user'], $totalImageSize);
 
         $this->em->flush();
 
@@ -86,7 +103,7 @@ class PostService
     /**
      * Update the user's storage details
      */
-    private function updateUserStorage(User $user, int $imageSize, bool $addUsedSpace = true): void
+    private function updateUserStorage(User $user, int $imageSize, bool $addUsedSpace = true): bool
     {
         $storage = $user->getStorage();
 
@@ -104,11 +121,12 @@ class PostService
             $usedSpace -= $imageSize;
         }
 
-        if ($usedSpace > $totalSpace) {
-            // Handle storage limit exceeded
+        if ($usedSpace >= $totalSpace) {
+            // TODO: Handle storage limit exceeded
             // For example, you can log an error message or send a notification to the user
             // You can also implement a storage cleanup mechanism to free up space
             // Here's an example of logging an error message:
+            return false;
             error_log("Storage limit exceeded for user: " . $user->getId());
             throw new Exception("Storage limit exceeded.");
         }
@@ -118,6 +136,8 @@ class PostService
         $storage->setUsedSpace($usedSpace);
         $storage->setRemainingSpace($remainingSpace);
         $this->em->persist($storage);
+        $this->em->flush();
+        return true;
     }
 
 
