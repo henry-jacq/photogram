@@ -1,12 +1,12 @@
 <?php
 
 use Slim\App;
-use Slim\Routing\RouteCollectorProxy;
 use App\Controller\ApiController;
-use App\Middleware\AuthMiddleware;
 use App\Controller\AuthController;
-use App\Controller\HomeController;
-use App\Controller\ProfileController;
+use App\Controller\UserController;
+use App\Middleware\AuthMiddleware;
+use App\Controller\SupportController;
+use Slim\Routing\RouteCollectorProxy;
 use App\Middleware\AuthoriseMiddleware;
 
 return function (App $app) {
@@ -14,14 +14,14 @@ return function (App $app) {
     // User Routes
     // Prevent user routes access for not logged in users
     $app->group('/', function (RouteCollectorProxy $group) {
-        $group->get('home', [HomeController::class, 'home']);
-        $group->get('discover', [HomeController::class, 'discover']);
-        $group->get('subscribe', [HomeController::class, 'subscribe']);
-        $group->get('settings/{tab}', [HomeController::class, 'settings']);
-        $group->get('profile/edit', [ProfileController::class, 'edit']);
-        $group->get('profile/{name}', [ProfileController::class, 'profile']);
-        $group->get('files/{category}/{image}', [HomeController::class, 'files']);
-        $group->get('logout', [HomeController::class, 'logout']);
+        $group->get('home', [UserController::class, 'home']);
+        $group->get('discover', [UserController::class, 'discover']);
+        $group->get('subscribe', [UserController::class, 'subscribe']);
+        $group->get('settings/{tab}', [UserController::class, 'settings']);
+        $group->get('profile/edit', [UserController::class, 'edit']);
+        $group->get('profile/{name}', [UserController::class, 'profile']);
+        $group->get('files/{category}/{image}', [UserController::class, 'files']);
+        $group->get('logout', [UserController::class, 'logout']);
     })->add(AuthoriseMiddleware::class);
 
     // Auth Routes
