@@ -1,7 +1,7 @@
 <div class="container mt-3 px-md-5">
     <div class="d-flex flex-column justify-content-around align-items-center">
-        <h3 class="display-4 mt-5 pt-3 pb-3 text-prime text-gradient">Photogram Pro</h3>
-        <p class="fs-3 mb-5 lead pb-5">Get started with Photogram Pro subscription that works for you.</p>
+        <h3 class="display-4 fw-normal mt-5 pt-3 pb-3 text-prime text-gradient">Photogram Pro</h3>
+        <p class="fs-3 mb-5 pb-5">Get started with Photogram Pro subscription that works for you.</p>
         <div class="row mb-3 text-center">
             <div class="col col-sm-12 col-md-6">
                 <div class="card bg-body bg-gradient mb-4 rounded-3 shadow-lg border-0">
@@ -30,7 +30,7 @@
                             </div>
                             <small class="ms-auto small text-end">Prices are marked in INR</small>
                         </div>
-                        <button type="button" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</button>
+                        <a href="/pro/subscribe/monthly" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                             </div>
                             <small class="ms-auto small text-end">Prices are marked in INR</small>
                         </div>
-                        <button type="button" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</button>
+                        <a href="/pro/subscribe/yearly" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</a>
                     </div>
                 </div>
             </div>
@@ -135,7 +135,10 @@
                 <div class="card-body">
                     <h5 class="card-title">Upgrade to Photogram Pro Today!</h5>
                     <p class="card-text">Unlock all premium features and take your photo-sharing experience to the next level. Don't miss out on our exclusive offer!</p>
-                    <button type="button" class="btn btn-light">Get Started</button>
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                        <button type="button" class="btn btn-warning">Start Pro Trial</button>
+                        <button type="button" class="btn btn-info">Contact us</button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@
 use Slim\App;
 use App\Controller\ApiController;
 use App\Controller\AuthController;
+use App\Controller\ProController;
 use App\Controller\UserController;
 use App\Middleware\AuthMiddleware;
 use App\Controller\SupportController;
@@ -16,12 +17,13 @@ return function (App $app) {
     $app->group('/', function (RouteCollectorProxy $group) {
         $group->get('home', [UserController::class, 'home']);
         $group->get('discover', [UserController::class, 'discover']);
-        $group->get('subscribe', [UserController::class, 'subscribe']);
         $group->get('settings/{tab}', [UserController::class, 'settings']);
         $group->get('profile/edit', [UserController::class, 'edit']);
         $group->get('profile/{name}', [UserController::class, 'profile']);
         $group->get('files/{category}/{image}', [UserController::class, 'files']);
         $group->get('logout', [UserController::class, 'logout']);
+        $group->get('pro/plans', [ProController::class, 'plans']);
+        $group->get('pro/subscribe/{plan}', [ProController::class, 'subscribe']);
     })->add(AuthoriseMiddleware::class);
 
     // Auth Routes

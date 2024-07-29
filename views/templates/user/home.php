@@ -20,7 +20,7 @@
             <div class="text-body-secondary">
                 <small><?= formatSizeUnits($usedSpace); ?> of <?= formatSizeUnits($totalSpace); ?> used</small>
             </div>
-            <a href="/subscribe" class="btn btn-sm btn-warning mt-3">Buy Storage</a>
+            <a href="/settings/account" class="btn btn-sm btn-warning mt-3">Buy Storage</a>
         </div>
 
         <div class="d-flex justify-content-between align-items-center">

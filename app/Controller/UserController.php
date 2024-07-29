@@ -45,18 +45,6 @@ class UserController extends Controller
         return $this->render($response, 'user/discover', $args);
     }
 
-    public function subscribe(Request $request, Response $response): Response
-    {
-        $userData = $request->getAttribute('userData');
-
-        $args = [
-            'title' => 'Upgrade to Pro',
-            'user' => $userData
-        ];
-
-        return $this->render($response, 'user/subscribe', $args);
-    }
-
     public function settings(Request $request, Response $response): Response
     {
         $tab = $request->getAttribute('tab');

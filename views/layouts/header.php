@@ -60,7 +60,7 @@
                                     <a class="dropdown-item" href="/settings/account"><i class="bi bi-gear me-2"></i>Settings</a>
                                 </li>
                                 <li class="">
-                                    <a href="/subscribe" role="button" class="dropdown-item bg-body-tertiary text-warning"><i class="bi bi-star me-2"></i>Upgrade to Pro!</a>
+                                    <a href="/pro/plans" role="button" class="dropdown-item bg-body-tertiary text-warning"><i class="bi bi-star me-2"></i>Upgrade to Pro!</a>
                                 </li>
                                 <li class="dropdown-divider"></li>
                                 <li>
