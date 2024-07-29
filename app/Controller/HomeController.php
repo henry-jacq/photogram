@@ -50,7 +50,7 @@ class HomeController extends Controller
         $userData = $request->getAttribute('userData');
 
         $args = [
-            'title' => 'Photogram Pro',
+            'title' => 'Upgrade to Pro',
             'user' => $userData
         ];
 
