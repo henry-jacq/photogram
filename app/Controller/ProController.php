@@ -41,6 +41,14 @@ class ProController extends Controller
         $plan = $request->getAttribute('plan');
         $userData = $request->getAttribute('userData');
 
+        if ($plan !== 'monthly' && $plan !== 'yearly') {
+            return $this->renderErrorPage($response, [
+                'title' => 'Invalid Plan',
+                'code' => 404,
+                'reason' => 'The page you are looking for was not found or other error occured'
+            ]);
+        }
+
         $args = [
             'title' => 'Subscribe',
             'user' => $userData,
@@ -48,5 +56,31 @@ class ProController extends Controller
         ];
 
         return $this->render($response, 'pro/subscribe', $args);
+    }
+
+    public function payment(Request $request, Response $response): Response
+    {
+        $plan = $request->getAttribute('plan');
+        $userData = $request->getAttribute('userData');
+
+        $args = [
+            'title' => 'Payment',
+            'user' => $userData,
+            'plan' => $plan
+        ];
+
+        return $this->render($response, 'pro/payment', $args);
+    }
+
+    public function manage(Request $request, Response $response): Response
+    {
+        $userData = $request->getAttribute('userData');
+
+        $args = [
+            'title' => 'Manage Subscription',
+            'user' => $userData
+        ];
+
+        return $this->render($response, 'pro/manage', $args);
     }
 }

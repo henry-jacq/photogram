@@ -102,42 +102,28 @@
         <div class="w-100 py-4 text-center">
             <h5 class="mt-4">Frequently Asked Questions (FAQ)</h5>
             <div class="d-flex flex-column align-items-center mt-4">
-                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 50rem;">
+                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 40rem;">
                     <div class="card-body">
-                        <h6 class="card-title">Is Photogram free to use?</h6>
-                        <p class="card-text">Yes! Photogram offers a free plan with basic features. If you need more storage and advanced tools, you can upgrade to one of our premium subscription plans.</p>
+                        <h6 class="card-title"><i class="bi bi-question-circle me-2"></i>What is Photogram Pro?</h6>
+                        <p class="card-text">Photogram Pro is a premium subscription service that offers advanced features to enhance your photo-sharing experience on Photogram. This includes additional storage, advanced analytics, exclusive filters, and more.</p>
                     </div>
                 </div>
-                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 50rem;">
+                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 40rem;">
                     <div class="card-body">
-                        <h6 class="card-title">What types of photos can I share?</h6>
-                        <p class="card-text">You can share any type of photo you like, as long as it adheres to our community guidelines. Whether it’s travel, food, portraits, or landscapes, we encourage creativity in all forms.</p>
+                        <h6 class="card-title"><i class="bi bi-question-circle me-2"></i>Can I switch plans?</h6>
+                        <p class="card-text">Yes, you can switch between Monthly and Yearly plans at any time. The changes will take effect in the next billing cycle.</p>
                     </div>
                 </div>
-                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 50rem;">
+                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 40rem;">
                     <div class="card-body">
-                        <h6 class="card-title">How do I upgrade my plan?</h6>
-                        <p class="card-text">Upgrading is easy. Just log into your account, go to the 'Plans & Pricing' section, and choose the plan that best fits your needs. Follow the instructions to complete your upgrade.</p>
+                        <h6 class="card-title"><i class="bi bi-question-circle me-2"></i>Is there a free trial?</h6>
+                        <p class="card-text">Currently, we do not offer a free trial for Photogram Pro. However, you can start with the Monthly plan to experience the premium features before committing to a Yearly subscription.</p>
                     </div>
                 </div>
-                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 50rem;">
+                <div class="card bg-body-secondary text-start shadow-sm mb-4 w-100" style="max-width: 40rem;">
                     <div class="card-body">
-                        <h6 class="card-title">Can I control who sees my photos?</h6>
-                        <p class="card-text">Absolutely. Photogram offers customizable privacy settings, allowing you to choose whether your photos are public, visible to followers, or private. Manage your privacy from the settings menu.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Call-to-Action Banner -->
-        <div class="w-100 py-4 text-center">
-            <div class="card bg-prime text-light shadow-lg mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Upgrade to Photogram Pro Today!</h5>
-                    <p class="card-text">Unlock all premium features and take your photo-sharing experience to the next level. Don't miss out on our exclusive offer!</p>
-                    <div class="d-flex align-items-center justify-content-center gap-2">
-                        <button type="button" class="btn btn-warning">Start Pro Trial</button>
-                        <button type="button" class="btn btn-info">Contact us</button>
+                        <h6 class="card-title"><i class="bi bi-question-circle me-2"></i>How can I cancel my subscription?</h6>
+                        <p class="card-text">You can cancel your subscription at any time from your account settings. The cancellation will take effect at the end of your current billing cycle.</p>
                     </div>
                 </div>
             </div>
