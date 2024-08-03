@@ -36,6 +36,14 @@ return function (App $app) {
         $group->get('forgot-password', [AuthController::class, 'forgotPassword']);
     })->add(AuthMiddleware::class);
 
+    // Help and support routes
+    $app->group('/', function (RouteCollectorProxy $group) {
+        $group->get('privacy-policy', [SupportController::class, 'privacyPolicy']);
+        $group->get('terms-and-conditions', [SupportController::class, 'tac']);
+        $group->get('contact-us', [SupportController::class, 'contactUs']);
+        $group->get('about-us', [SupportController::class, 'aboutUs']);
+    })->add(AuthoriseMiddleware::class);
+
     // API Routes
     $app->group('/api', function (RouteCollectorProxy $group) {
         $group->any('/{namespace}/{resource}[/{params:.*}]', [ApiController::class, 'process']);
