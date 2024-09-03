@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240727064025 extends AbstractMigration
+final class Version20240823100946 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -31,8 +31,8 @@ final class Version20240727064025 extends AbstractMigration
         $this->addSql('CREATE TABLE user_data (user_id INT UNSIGNED NOT NULL, full_name VARCHAR(255) DEFAULT NULL, profile_avatar VARCHAR(255) DEFAULT NULL, website VARCHAR(255) DEFAULT NULL, job_title VARCHAR(255) DEFAULT NULL, bio LONGTEXT DEFAULT NULL, location VARCHAR(255) DEFAULT NULL, instagram_handle VARCHAR(255) DEFAULT NULL, linkedin_handle VARCHAR(255) DEFAULT NULL, PRIMARY KEY(user_id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user_emails (id INT UNSIGNED AUTO_INCREMENT NOT NULL, user_id INT UNSIGNED NOT NULL, email VARCHAR(255) NOT NULL, isPrimary TINYINT(1) DEFAULT 0 NOT NULL, UNIQUE INDEX UNIQ_29D3F36FE7927C74 (email), INDEX IDX_29D3F36FA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user_sessions (id INT UNSIGNED AUTO_INCREMENT NOT NULL, user_id INT UNSIGNED NOT NULL, session_id VARCHAR(255) NOT NULL, session_token VARCHAR(255) NOT NULL, ip_address VARCHAR(255) NOT NULL, user_agent VARCHAR(255) NOT NULL, login_time DATETIME NOT NULL, last_activity DATETIME NOT NULL, UNIQUE INDEX UNIQ_7AED7913613FECDF (session_id), INDEX IDX_7AED7913A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE user_storage (id INT UNSIGNED AUTO_INCREMENT NOT NULL, user_id INT UNSIGNED NOT NULL, total_space DOUBLE PRECISION UNSIGNED NOT NULL, used_space DOUBLE PRECISION UNSIGNED NOT NULL, remaining_space DOUBLE PRECISION UNSIGNED NOT NULL, INDEX IDX_C77053EA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE users (id INT UNSIGNED AUTO_INCREMENT NOT NULL, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL, reset_token VARCHAR(255) DEFAULT NULL, reset_token_expiry DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_1483A5E9F85E0677 (username), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE user_storage (id INT UNSIGNED AUTO_INCREMENT NOT NULL, user_id INT UNSIGNED NOT NULL, total_space DOUBLE PRECISION UNSIGNED NOT NULL, used_space DOUBLE PRECISION UNSIGNED NOT NULL, remaining_space DOUBLE PRECISION UNSIGNED NOT NULL, UNIQUE INDEX UNIQ_C77053EA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE users (id INT UNSIGNED AUTO_INCREMENT NOT NULL, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, active INT NOT NULL, created_at DATETIME NOT NULL, reset_token VARCHAR(255) DEFAULT NULL, reset_token_expiry DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_1483A5E9F85E0677 (username), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE comments ADD CONSTRAINT FK_5F9E962A4B89032C FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE comments ADD CONSTRAINT FK_5F9E962AC1D1E858 FOREIGN KEY (post_owner_id) REFERENCES users (id)');
         $this->addSql('ALTER TABLE comments ADD CONSTRAINT FK_5F9E962A541DB185 FOREIGN KEY (comment_user_id) REFERENCES users (id)');
