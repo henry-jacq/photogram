@@ -15,6 +15,7 @@
         "doctrine/orm": "^2.13",
         "nesbot/carbon": "^2.68",
         "php-di/php-di": "^7.0",
+        "phpmailer/phpmailer": "^6.9",
         "slim/psr7": "^1.6",
         "slim/slim": "4.*",
         "symfony/cache": "^6.1",
