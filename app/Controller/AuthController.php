@@ -34,6 +34,23 @@ class AuthController extends Controller
         return $this->render($response, 'auth/onboarding', $args, false, false);
     }
     
+    public function activateView(Request $request, Response $response): Response
+    {
+        $username = $request->getQueryParams()['username'] ?? null;
+
+        if (empty($username)) {
+            return $this->redirect($response, '/login');
+        }
+
+        $args = [
+            'title' => 'Activate Account',
+            'auth_css' => true,
+            'username' => $username
+        ];
+        
+        return $this->render($response, 'auth/activate', $args, false, false);
+    }
+    
     public function loginView(Request $request, Response $response): Response
     {
         $args = [

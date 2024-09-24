@@ -1,5 +1,13 @@
 <div class="h-100 d-flex align-items-center justify-content-center row user-select-none min-vh-100">
     <div class="py-3 col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+        <?php 
+        $success = $this->session->getFlash('success');
+        $error = $this->session->getFlash('error');
+        if (!empty($success)): ?>
+            <div class="alert alert-success alert-dismissible fade show"><i class="bi bi-check-circle me-2"></i><b class="fw-semibold"><?= $success['message']?></b> You can now login.<button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button></div>
+        <?php elseif (!empty($error)): ?>
+            <div class="alert alert-danger alert-dismissible fade show"><i class="bi bi-exclamation-circle me-2"></i><b class="fw-semibold"><?= $error['message']?></b> Please try again.<button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button></div>
+        <?php endif; ?>
         <form class="user-login-form" method="post" autocomplete="off">
             <div class="form-control px-4 py-3 bg-dark shadow-lg bg-opacity-25">
                 <img src="/assets/brand/photogram-logo.png" alt="logo" class="img-fluid mx-auto d-block mb-2" width="63" height="63">

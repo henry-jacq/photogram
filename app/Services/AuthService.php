@@ -22,6 +22,7 @@ class AuthService
     public function __construct(
         private readonly Session $session,
         private readonly UserService $user,
+        private readonly MailService $mailer,
         private readonly EntityManager $em,
     )
     {
@@ -46,6 +47,7 @@ class AuthService
         $user->setUsername($credentials['username']);
         $user->setPassword(password_hash($credentials['password'], PASSWORD_DEFAULT, ['cost' => 12]));
         $user->setCreatedAt(new \DateTime());
+        $user->setActive(0);
         $this->em->persist($user);
         
         $userData = new UserData();
@@ -111,6 +113,61 @@ class AuthService
             return true;
         }
 
+        return false;
+    }
+
+    public function isUserActive(string $username)
+    {
+        $user = $this->user->getByUsername($username);
+        if ($user && $user->getActive()) {
+            return true;
+        }
+        return $user;
+    }
+
+    public function sendActivationEmail(User $user)
+    {
+        $html = $this->mailer->getMailTemplate("activation", [
+            'userName' => $user->getUsername(),
+            'passCode' => $user->getPassCode()
+        ]);
+        $this->mailer->addRecipient($user->getPrimaryEmail());
+        $this->mailer->addSubject('[Photogram] Your Account Activation Code');
+        $this->mailer->isHTML(true);
+        $this->mailer->addBody($html);
+        return $this->mailer->sendMail();
+    }
+
+    public function updatePassCode(User $user)
+    {
+        // TODO: Add expiry time for the passcode by modifying the User entity
+        $user->setPassCode(mt_rand(100000, 999999));
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
+    public function resendActivationEmail(string $username)
+    {
+        $user = $this->user->getByUsername($username);
+        if ($user) {
+            $this->updatePassCode($user);
+            $this->sendActivationEmail($user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Activate the user account
+     */
+    public function activateAccount(User $user, int $passcode)
+    {
+        if ($user && $user->getPassCode() === $passcode) {
+            $user->setActive(1);
+            $this->em->persist($user);
+            $this->em->flush();
+            return true;
+        }
         return false;
     }
     

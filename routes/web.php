@@ -32,6 +32,7 @@ return function (App $app) {
         $group->get('', [AuthController::class, 'landingView']);
         $group->get('onboarding', [AuthController::class, 'onboardView']);
         $group->get('login', [AuthController::class, 'loginView']);
+        $group->get('activate', [AuthController::class, 'activateView']);
         $group->get('register', [AuthController::class, 'registerView']);
         $group->get('forgot-password', [AuthController::class, 'forgotPassword']);
     })->add(AuthMiddleware::class);

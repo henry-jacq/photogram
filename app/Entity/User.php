@@ -21,6 +21,12 @@ class User
     #[ORM\Column(type: 'string')]
     private string $password;
 
+    #[ORM\Column(type: 'integer')]
+    private int $active;
+
+    #[ORM\Column(type: 'integer', name: 'pass_code', nullable: true)]
+    private ?string $passCode;
+
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
 
@@ -92,6 +98,28 @@ class User
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function getActive(): int
+    {
+        return $this->active;
+    }
+
+    public function setActive(int $active): self
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    public function getPassCode(): int
+    {
+        return $this->passCode;
+    }
+
+    public function setPassCode(int $passCode): self
+    {
+        $this->passCode = $passCode;
         return $this;
     }
 

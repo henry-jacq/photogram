@@ -39,10 +39,14 @@ if (currentPath == "/login") {
             processData: false,
             contentType: false,
             success: function (response) {
-                $('.btn-login').html('Logging in...');
-                if (response.message == 'Authenticated') {
-                    location.replace(response.redirect);
+                if (response.message == 'Activation Required') {
+                    $('.btn-login').html('Performing activation...');
+                } else if (response.message == 'Authenticated') {
+                    $('.btn-login').html('Logging in...');
                 }
+                setTimeout(function () {
+                    location.replace(response.redirect);
+                }, 2000);
             },
             error: function (jqXHR, textStatus) {
                 if (textStatus == 'error') {
@@ -52,6 +56,80 @@ if (currentPath == "/login") {
                     }
                     $('.btn-login').attr('disabled', false);
                     $('.btn-login').html('Login now!');
+                }
+            }
+        });
+    });
+}
+
+if (currentPath.startsWith('/activate')) {
+    $('.btn-verify').on('click', function (event) {
+        event.preventDefault();
+        $('.btn-verify').attr('disabled', true);
+        $('.btn-verify').html('Verifying code...');
+        const formData = new FormData();
+        formData.append('username', $(this).parent().data('username'));
+        formData.append('passcode', $('#passcode').val());
+
+        $.ajax({
+            type: "POST",
+            url: "/api/auth/activate",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('.btn-verify').html('Activating account...');
+                setTimeout(function () {
+                    location.replace(response.redirect);
+                }, 2000);
+            },
+            error: function (jqXHR) {
+                if (jqXHR.status === 401) {
+                    if ($('.alert.alert-danger.alert-dismissible.fade.show').length === 0) {
+                        var errorMessage = $('<div>').addClass('alert alert-danger alert-dismissible fade show').html('<i class="bi bi-exclamation-circle me-2"></i><b class="fw-semibold">Invalid passcode!</b> Please check and try again.<button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>');
+                        $(errorMessage).insertBefore('form');
+                    }
+                    $('.btn-verify').attr('disabled', false);
+                    $('.btn-verify').html('Verify');
+                }
+            }
+        });
+    });
+
+    $('.btn-resend-code').on('click', function (event) {
+        event.preventDefault();
+        var username = $(this).parent().parent().data('username');
+        $('.btn-resend-code').attr('disabled', true);
+        $('.btn-resend-code').html('Resending code...');
+        
+        $.ajax({
+            type: "POST",
+            url: "/api/auth/resend-code",
+            data: JSON.stringify({
+                'username': username,
+                'resend': true
+            }),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.message == 'Code Sent') {
+                    if ($('.alert.alert-success.alert-dismissible.fade.show').length === 0) {
+                        var successMessage = $('<div>').addClass('alert alert-success alert-dismissible fade show').html('<i class="bi bi-check-circle me-2"></i><b class="fw-semibold">Code Sent!</b> Check your mailbox.<button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>');
+                        $(successMessage).insertBefore('form');
+                    }
+                    $('.btn-resend-code').attr('disabled', false);
+                    $('.btn-resend-code').html('Resend code');
+                }
+            },
+            error: function (jqXHR, textStatus) {
+                if (jqXHR.responseJSON.message == 'Unauthorized') {
+                    location.replace(jqXHR.responseJSON.redirect)
+                } else if (textStatus == 'error') {
+                    if ($('.alert.alert-danger.alert-dismissible.fade.show').length === 0) {
+                        var errorMessage = $('<div>').addClass('alert alert-danger alert-dismissible fade show').html('<i class="bi bi-exclamation-circle me-2"></i><b class="fw-semibold">Invalid credentials!</b> Please try again.<button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>');
+                        $(errorMessage).insertBefore('form');
+                    }
+                    $('.btn-resend-code').attr('disabled', false);
+                    $('.btn-resend-code').html('Resend code');
                 }
             }
         });

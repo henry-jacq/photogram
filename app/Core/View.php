@@ -15,7 +15,10 @@ class View implements ViewInterface
     private string $baseViewName;
     private string $contentsBlock;
     
-    public function __construct(private readonly Config $config)
+    public function __construct(
+        private readonly Config $config,
+        private readonly Session $session,
+    )
     {
         $this->title = $config->get('app.name');
         $this->baseViewName = $config->get('view.base_view');
@@ -163,6 +166,14 @@ class View implements ViewInterface
     public function render(): void
     {
         echo($this->resultView);
+    }
+
+    /**
+     * Get the page contents
+     */
+    public function getPageContents()
+    {
+        return $this->resultView;
     }
 
     /**

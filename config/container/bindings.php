@@ -43,7 +43,10 @@ return [
         return new Request($container->get(SessionInterface::class));
     },
     View::class => function (ContainerInterface $container) {
-        return new View($container->get(Config::class));
+        return new View(
+            $container->get(Config::class),
+            $container->get(Session::class)
+        );
     },
     SessionInterface::class => function (ContainerInterface $container) {
         return new Session($container->get(Config::class));

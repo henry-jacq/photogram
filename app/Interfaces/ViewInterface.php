@@ -4,10 +4,11 @@ namespace App\Interfaces;
 
 use App\Core\View;
 use App\Core\Config;
+use App\Core\Session;
 
 interface ViewInterface
 {
-    public function __construct(Config $config);
+    public function __construct(Config $config, Session $session);
 
     public function renderLayout(string $layoutName, array $params);
 

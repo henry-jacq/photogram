@@ -1,6 +1,16 @@
 <?php
 
-${basename(__FILE__, '.php')} = function () {  
+use App\Entity\User;
+
+${basename(__FILE__, '.php')} = function () {
+    if ($this->auth->isAuthenticated()) {
+        usleep(mt_rand(400000, 1300000));
+        return $this->response([
+            'message' => 'Already Authenticated',
+            'redirect' => $this->getRedirect('/home')
+        ], 202);
+    }
+
     if ($this->paramsExists(['username', 'password'])) {
         $data = [
             'username' => $this->data['username'],
@@ -8,10 +18,21 @@ ${basename(__FILE__, '.php')} = function () {
             'ipAddress' => $this->getServerParam('REMOTE_ADDR'),
             'userAgent' => $this->getServerParam('HTTP_USER_AGENT')
         ];
-        
-        $login = $this->auth->login($data);
 
-        if ($login) {
+        $user = $this->auth->isUserActive($data['username']);
+
+        if ($user instanceof User) {
+            $this->auth->updatePassCode($user);
+            $this->auth->sendActivationEmail($user);
+            return $this->response([
+                'message' => 'Activation Required',
+                'redirect' => $this->getRedirect('/activate?username=' . $user->getUsername())
+            ], 202);
+        }
+
+        $result = $this->auth->login($data);
+
+        if ($result) {
             usleep(mt_rand(400000, 1300000));
             return $this->response([
                 'message' => 'Authenticated',

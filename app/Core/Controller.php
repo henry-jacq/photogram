@@ -33,4 +33,9 @@ class Controller
         );
         return $response;
     }
+
+    public function redirect(Response $response, string $location, int $status = 302): Response
+    {
+        return $response->withHeader('Location', $location)->withStatus($status);
+    }
 }
