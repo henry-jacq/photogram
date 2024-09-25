@@ -1,4 +1,4 @@
-<div class="container px-md-5">
+<div class="container">
     <div class="post-feed-section py-4">
         <?php
         $usedSpace = $user->getStorage()->getUsedSpace();

@@ -66,5 +66,21 @@ $theme-colors: map-merge($custom-theme-colors, $theme-colors);
     background: var(--bs-tertiary-color);
 }
 
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+input[type="search"]::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+input[type="search"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 // Import Bootstrap
 @import '../../../node_modules/bootstrap/scss/bootstrap';

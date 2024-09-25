@@ -26,3 +26,17 @@
     transform: scale(1);
     opacity: 1;
 }
+
+.dropdown-menu .dropdown-item,
+.dropdown-menu .dropdown-item:hover {
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.notification-dropdown .icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

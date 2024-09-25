@@ -28,7 +28,7 @@
                 <a role="button" class="btn py-1 px-2 rounded-circle" id="postCardAction-<?= $p->getId() ?>" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="postCardAction-<?= $p->getId() ?>">
+                <ul class="dropdown-menu dropdown-menu-end mt-2 p-2" aria-labelledby="postCardAction-<?= $p->getId() ?>">
                     <li data-id="<?= $p->getId() ?>">
                         <a class="dropdown-item btn-download" role="button">
                             <i class="fa-solid fa-download" aria-hidden="true"></i>
@@ -72,7 +72,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li data-id="<?= $p->getId() ?>">
-                            <a class="dropdown-item btn btn-delete text-danger" role="button">
+                            <a class="dropdown-item btn-delete bg-body-tertiary text-danger" role="button">
                                 <i class="fa-solid fa-trash-can fa-sm" aria-hidden="true"></i>
                                 <span class="ms-2">Delete</span>
                             </a>
