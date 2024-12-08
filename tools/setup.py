@@ -9,6 +9,8 @@ hf_home_dir = os.path.join(root_dir, 'storage', 'cache')
 # Set environment variable for the cache directory
 os.environ['HF_HOME'] = hf_home_dir
 
+os.environ['TRANSFORMERS_CACHE'] = hf_home_dir
+
 # Set logging level to ERROR to suppress warnings
 logging.getLogger("transformers").setLevel(logging.ERROR)
 
