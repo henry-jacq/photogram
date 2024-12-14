@@ -30,7 +30,7 @@
                             </div>
                             <small class="ms-auto small text-end">Prices are marked in INR</small>
                         </div>
-                        <a href="/pro/subscribe/monthly" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</a>
+                        <a href="/pro/subscribe?plans=monthly" class="btn w-100 bg-body-secondary border-0 text-body">Choose Plan</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                             </div>
                             <small class="ms-auto small text-end">Prices are marked in INR</small>
                         </div>
-                        <a href="/pro/subscribe/yearly" class="btn w-100 bg-body-secondary border-0 text-body">Subscribe</a>
+                        <a href="/pro/subscribe?plans=yearly" class="btn w-100 bg-body-secondary border-0 text-body">Choose Plan</a>
                     </div>
                 </div>
             </div>
